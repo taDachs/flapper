@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { apiGet, apiPost, apiPut, apiDelete } from "../api";
 import styles from "./ExerciseLibrary.module.css";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -60,6 +61,10 @@ export default function ExerciseLibrary() {
 
   // Action error (archive / delete)
   const [actionError, setActionError] = useState("");
+
+  // Confirmation dialog state
+  type ConfirmState = { message: string; onConfirm: () => void };
+  const [confirmState, setConfirmState] = useState<ConfirmState | null>(null);
 
   async function loadExercises() {
     try {
@@ -144,24 +149,36 @@ export default function ExerciseLibrary() {
 
   // ── Archive / Delete ──────────────────────────────────────────────────
 
-  async function handleArchive(exercise: Exercise) {
-    setActionError("");
-    try {
-      await apiPost(`/api/exercises/${exercise.id}/archive`, {});
-      await loadExercises();
-    } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to archive exercise.");
-    }
+  function handleArchive(exercise: Exercise) {
+    setConfirmState({
+      message: `Archive "${exercise.name}"? It will be hidden from new training days but its log history will be preserved.`,
+      onConfirm: async () => {
+        setConfirmState(null);
+        setActionError("");
+        try {
+          await apiPost(`/api/exercises/${exercise.id}/archive`, {});
+          await loadExercises();
+        } catch (err) {
+          setActionError(err instanceof Error ? err.message : "Failed to archive exercise.");
+        }
+      },
+    });
   }
 
-  async function handleDelete(exercise: Exercise) {
-    setActionError("");
-    try {
-      await apiDelete(`/api/exercises/${exercise.id}`);
-      await loadExercises();
-    } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to delete exercise.");
-    }
+  function handleDelete(exercise: Exercise) {
+    setConfirmState({
+      message: `Delete "${exercise.name}"? This cannot be undone.`,
+      onConfirm: async () => {
+        setConfirmState(null);
+        setActionError("");
+        try {
+          await apiDelete(`/api/exercises/${exercise.id}`);
+          await loadExercises();
+        } catch (err) {
+          setActionError(err instanceof Error ? err.message : "Failed to delete exercise.");
+        }
+      },
+    });
   }
 
   // ── Fields modal ──────────────────────────────────────────────────────
@@ -534,6 +551,15 @@ export default function ExerciseLibrary() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Confirmation dialog */}
+      {confirmState && (
+        <ConfirmDialog
+          message={confirmState.message}
+          onConfirm={confirmState.onConfirm}
+          onCancel={() => setConfirmState(null)}
+        />
       )}
     </div>
   );

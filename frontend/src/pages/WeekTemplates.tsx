@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { apiGet, apiPost, apiPut, apiDelete } from "../api";
 import styles from "./WeekTemplates.module.css";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -77,6 +78,10 @@ export default function WeekTemplates() {
   // Action error
   const [actionError, setActionError] = useState("");
 
+  // Confirmation dialog state
+  type ConfirmState = { message: string; onConfirm: () => void };
+  const [confirmState, setConfirmState] = useState<ConfirmState | null>(null);
+
   async function loadTemplates() {
     try {
       const data = await apiGet("/api/week-templates");
@@ -151,17 +156,23 @@ export default function WeekTemplates() {
 
   // ── Delete template ────────────────────────────────────────────────────
 
-  async function handleDelete(template: TemplateSummary) {
-    setActionError("");
-    try {
-      await apiDelete(`/api/week-templates/${template.id}`);
-      if (selectedTemplate?.id === template.id) {
-        setSelectedTemplate(null);
-      }
-      await loadTemplates();
-    } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to delete template.");
-    }
+  function handleDelete(template: TemplateSummary) {
+    setConfirmState({
+      message: `Delete the template "${template.name}"? This cannot be undone.`,
+      onConfirm: async () => {
+        setConfirmState(null);
+        setActionError("");
+        try {
+          await apiDelete(`/api/week-templates/${template.id}`);
+          if (selectedTemplate?.id === template.id) {
+            setSelectedTemplate(null);
+          }
+          await loadTemplates();
+        } catch (err) {
+          setActionError(err instanceof Error ? err.message : "Failed to delete template.");
+        }
+      },
+    });
   }
 
   // ── Rename template ────────────────────────────────────────────────────
@@ -614,6 +625,15 @@ export default function WeekTemplates() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Confirmation dialog */}
+      {confirmState && (
+        <ConfirmDialog
+          message={confirmState.message}
+          onConfirm={confirmState.onConfirm}
+          onCancel={() => setConfirmState(null)}
+        />
       )}
     </div>
   );
