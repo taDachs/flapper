@@ -37,3 +37,15 @@ export async function apiDelete(path: string) {
   if (!res.ok) throw new Error(data.error ?? "Request failed");
   return data;
 }
+
+export async function apiPatch(path: string, body: unknown) {
+  const res = await fetch(path, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? "Request failed");
+  return data;
+}
