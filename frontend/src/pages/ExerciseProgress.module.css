@@ -1,0 +1,92 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Empty / error ─────────────────────────────────────────────────────── */
+
+.empty {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.error {
+  color: var(--error);
+  font-size: 0.875rem;
+}
+
+/* ── Exercise section ──────────────────────────────────────────────────── */
+
+.exerciseSection {
+  margin-bottom: 2.5rem;
+}
+
+.exerciseHeading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Fields grid ───────────────────────────────────────────────────────── */
+
+.fieldsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Single field chart block ──────────────────────────────────────────── */
+
+.chartBlock {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem 0.5rem 0.75rem 0;
+}
+
+.fieldHeading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+}
+
+.chartWrap {
+  width: 100%;
+}
+
+/* ── Custom tooltip ────────────────────────────────────────────────────── */
+
+.tooltip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text);
+  pointer-events: none;
+}
+
+.tooltipDate {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  color: var(--text-muted);
+}
+
+.tooltipValue {
+  font-weight: 600;
+  color: var(--accent);
+}

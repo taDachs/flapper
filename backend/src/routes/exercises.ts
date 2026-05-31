@@ -19,6 +19,114 @@ const fieldBodySchema = z.object({
   display_order: z.number().int().min(0).optional(),
 });
 
+// ── Exercise Progress ──────────────────────────────────────────────────────
+
+// GET /api/exercises/progress — time-series data for every exercise field that
+// has at least one logged value, grouped by exercise.
+//
+// Response shape:
+// [
+//   {
+//     exercise_id: number,
+//     exercise_name: string,
+//     fields: [
+//       {
+//         field_id: number,
+//         field_name: string,
+//         unit: string | null,
+//         data_points: [{ date: string, value: string }]  // sorted asc by date
+//       }
+//     ]
+//   }
+// ]
+router.get("/progress", async (req, res) => {
+  const userId = req.session.userId!;
+
+  // Fetch all logged field values for this user's exercises, joined with
+  // session date and field/exercise metadata.
+  const { rows } = await pool.query<{
+    exercise_id: number;
+    exercise_name: string;
+    field_id: number;
+    field_name: string;
+    unit: string | null;
+    date: string;
+    value: string;
+  }>(
+    `SELECT
+       e.id            AS exercise_id,
+       e.name          AS exercise_name,
+       ef.id           AS field_id,
+       ef.name         AS field_name,
+       ef.unit         AS unit,
+       ts.date::text   AS date,
+       tsfv.value::text AS value
+     FROM training_session_field_values tsfv
+     JOIN exercise_fields ef ON ef.id = tsfv.field_id
+     JOIN exercises e ON e.id = ef.exercise_id
+     JOIN training_session_exercises tse ON tse.id = tsfv.session_exercise_id
+     JOIN training_sessions ts ON ts.id = tse.session_id
+     WHERE e.user_id = $1
+     ORDER BY e.id ASC, ef.id ASC, ts.date ASC, ts.id ASC`,
+    [userId]
+  );
+
+  if (rows.length === 0) {
+    res.json([]);
+    return;
+  }
+
+  // Group: exercise_id -> field_id -> data_points[]
+  const exerciseMap = new Map<
+    number,
+    {
+      exercise_id: number;
+      exercise_name: string;
+      fieldMap: Map<
+        number,
+        {
+          field_id: number;
+          field_name: string;
+          unit: string | null;
+          data_points: Array<{ date: string; value: string }>;
+        }
+      >;
+    }
+  >();
+
+  for (const row of rows) {
+    if (!exerciseMap.has(row.exercise_id)) {
+      exerciseMap.set(row.exercise_id, {
+        exercise_id: row.exercise_id,
+        exercise_name: row.exercise_name,
+        fieldMap: new Map(),
+      });
+    }
+    const ex = exerciseMap.get(row.exercise_id)!;
+
+    if (!ex.fieldMap.has(row.field_id)) {
+      ex.fieldMap.set(row.field_id, {
+        field_id: row.field_id,
+        field_name: row.field_name,
+        unit: row.unit,
+        data_points: [],
+      });
+    }
+    ex.fieldMap.get(row.field_id)!.data_points.push({
+      date: row.date,
+      value: row.value,
+    });
+  }
+
+  const result = Array.from(exerciseMap.values()).map((ex) => ({
+    exercise_id: ex.exercise_id,
+    exercise_name: ex.exercise_name,
+    fields: Array.from(ex.fieldMap.values()),
+  }));
+
+  res.json(result);
+});
+
 // ── Exercise CRUD ──────────────────────────────────────────────────────────
 
 // GET /api/exercises — list all active exercises with their fields
