@@ -1,5 +1,131 @@
 .content {
-  /* dashboard-specific layout if needed in future */
+  max-width: 900px;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.emptyState {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.emptyHeading {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.emptyActions {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.emptyHint {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* ── Widgets grid ─────────────────────────────────────────────────────────── */
+
+.widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.widget {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.widgetTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.widgetValue {
+  font-size: 0.95rem;
+}
+
+.widgetEmpty {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ── Links ───────────────────────────────────────────────────────────────── */
+
+.widgetLink {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.widgetLink:hover {
+  color: var(--accent);
+}
+
+.ctaLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.ctaLink:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+/* ── Quick links ─────────────────────────────────────────────────────────── */
+
+.quickLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.quickLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.quickLink:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+/* ── States ──────────────────────────────────────────────────────────────── */
+
+.error {
+  color: var(--error);
+}
+
+.loading {
+  color: var(--text-muted);
 }
 
 .placeholder {

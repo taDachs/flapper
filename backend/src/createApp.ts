@@ -7,6 +7,7 @@ import exercisesRouter from "./routes/exercises.js";
 import climbingSessionsRouter from "./routes/climbingSessions.js";
 import weekTemplatesRouter from "./routes/weekTemplates.js";
 import trainingSessionsRouter from "./routes/trainingSessions.js";
+import dashboardRouter from "./routes/dashboard.js";
 import { requireAuth } from "./middleware/requireAuth.js";
 
 export function createApp() {
@@ -40,6 +41,7 @@ export function createApp() {
   app.use("/api/climbing-sessions", climbingSessionsRouter);
   app.use("/api/week-templates", weekTemplatesRouter);
   app.use("/api/training-sessions", trainingSessionsRouter);
+  app.use("/api/dashboard", dashboardRouter);
 
   return app;
 }
