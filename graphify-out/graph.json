@@ -1,0 +1,4276 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "ralph_loop_agent_pipeline",
+        "label": "RALPH Loop Agent Pipeline - orchestrator spawns workers, merger merges PRs",
+        "nodes": [
+          "agents_ralph_orchestrator",
+          "agents_ralph_worker",
+          "agents_ralph_merger"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": ".claude/skills/ralph-loop/SKILL.md"
+      },
+      {
+        "id": "backend_startup_migration_flow",
+        "label": "Backend Startup Flow - index calls migrate then listens using pool",
+        "nodes": [
+          "src_index_start",
+          "db_run_migrate",
+          "db_pool"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "backend/src/index.ts"
+      },
+      {
+        "id": "domain_training_plan_execution",
+        "label": "Training Plan-to-Execution Model - Week Template drives Sessions via Training Days",
+        "nodes": [
+          "context_week_template_concept",
+          "context_training_day_concept",
+          "context_training_session_concept",
+          "context_training_day_exercise_concept",
+          "context_training_session_exercise_concept"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "CONTEXT.md"
+      },
+      {
+        "id": "auth_fullstack_flow",
+        "label": "Full-Stack Authentication Flow (backend routes + frontend context + API client)",
+        "nodes": [
+          "routes_auth_login_endpoint",
+          "routes_auth_logout_endpoint",
+          "routes_auth_me_endpoint",
+          "src_authcontext_auth_provider",
+          "src_api_api_post",
+          "src_api_api_get"
+        ],
+        "relation": "implement",
+        "confidence": "INFERRED",
+        "confidence_score": 0.95,
+        "source_file": "frontend/src/AuthContext.tsx"
+      },
+      {
+        "id": "route_protection_pattern",
+        "label": "Route Protection Pattern (guards + auth context + routing)",
+        "nodes": [
+          "src_app_require_auth",
+          "src_app_redirect_if_authed",
+          "src_authcontext_use_auth",
+          "src_app_app_routes"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "frontend/src/App.tsx"
+      },
+      {
+        "id": "agent_workflow_docs",
+        "label": "Agent Workflow Documentation (domain + issue tracker + triage labels)",
+        "nodes": [
+          "agents_domain_domain_docs",
+          "agents_issue_tracker_issue_tracker",
+          "agents_triage_labels_triage_labels"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "docs/agents/domain.md"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "id": "package_json",
+      "community": 8,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "id": "climbing_webapp_package_name",
+      "community": 8,
+      "norm_label": "name"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "id": "climbing_webapp_package_version",
+      "community": 8,
+      "norm_label": "version"
+    },
+    {
+      "label": "private",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "id": "climbing_webapp_package_private",
+      "community": 8,
+      "norm_label": "private"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "id": "climbing_webapp_package_scripts",
+      "community": 8,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "dev:backend",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "id": "climbing_webapp_package_scripts_dev_backend",
+      "community": 8,
+      "norm_label": "dev:backend"
+    },
+    {
+      "label": "dev:frontend",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "id": "climbing_webapp_package_scripts_dev_frontend",
+      "community": 8,
+      "norm_label": "dev:frontend"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "id": "climbing_webapp_package_scripts_build",
+      "community": 8,
+      "norm_label": "build"
+    },
+    {
+      "label": "create-user",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "id": "climbing_webapp_package_scripts_create_user",
+      "community": 8,
+      "norm_label": "create-user"
+    },
+    {
+      "label": "settings.local.json",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L1",
+      "id": "claude_settings_local_json",
+      "community": 13,
+      "norm_label": "settings.local.json"
+    },
+    {
+      "label": "permissions",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "id": "claude_settings_local_permissions",
+      "community": 13,
+      "norm_label": "permissions"
+    },
+    {
+      "label": "allow",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "id": "claude_settings_local_permissions_allow",
+      "community": 13,
+      "norm_label": "allow"
+    },
+    {
+      "label": "tsconfig.json",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L1",
+      "id": "frontend_tsconfig_json",
+      "community": 5,
+      "norm_label": "tsconfig.json"
+    },
+    {
+      "label": "compilerOptions",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L2",
+      "id": "frontend_tsconfig_compileroptions",
+      "community": 5,
+      "norm_label": "compileroptions"
+    },
+    {
+      "label": "target",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L3",
+      "id": "frontend_tsconfig_compileroptions_target",
+      "community": 5,
+      "norm_label": "target"
+    },
+    {
+      "label": "useDefineForClassFields",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L4",
+      "id": "frontend_tsconfig_compileroptions_usedefineforclassfields",
+      "community": 5,
+      "norm_label": "usedefineforclassfields"
+    },
+    {
+      "label": "lib",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L5",
+      "id": "frontend_tsconfig_compileroptions_lib",
+      "community": 5,
+      "norm_label": "lib"
+    },
+    {
+      "label": "module",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L6",
+      "id": "frontend_tsconfig_compileroptions_module",
+      "community": 5,
+      "norm_label": "module"
+    },
+    {
+      "label": "skipLibCheck",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L7",
+      "id": "frontend_tsconfig_compileroptions_skiplibcheck",
+      "community": 5,
+      "norm_label": "skiplibcheck"
+    },
+    {
+      "label": "moduleResolution",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L8",
+      "id": "frontend_tsconfig_compileroptions_moduleresolution",
+      "community": 5,
+      "norm_label": "moduleresolution"
+    },
+    {
+      "label": "allowImportingTsExtensions",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L9",
+      "id": "frontend_tsconfig_compileroptions_allowimportingtsextensions",
+      "community": 5,
+      "norm_label": "allowimportingtsextensions"
+    },
+    {
+      "label": "resolveJsonModule",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L10",
+      "id": "frontend_tsconfig_compileroptions_resolvejsonmodule",
+      "community": 5,
+      "norm_label": "resolvejsonmodule"
+    },
+    {
+      "label": "isolatedModules",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L11",
+      "id": "frontend_tsconfig_compileroptions_isolatedmodules",
+      "community": 5,
+      "norm_label": "isolatedmodules"
+    },
+    {
+      "label": "noEmit",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L12",
+      "id": "frontend_tsconfig_compileroptions_noemit",
+      "community": 5,
+      "norm_label": "noemit"
+    },
+    {
+      "label": "jsx",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L13",
+      "id": "frontend_tsconfig_compileroptions_jsx",
+      "community": 5,
+      "norm_label": "jsx"
+    },
+    {
+      "label": "strict",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L14",
+      "id": "frontend_tsconfig_compileroptions_strict",
+      "community": 5,
+      "norm_label": "strict"
+    },
+    {
+      "label": "include",
+      "file_type": "code",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L16",
+      "id": "frontend_tsconfig_include",
+      "community": 5,
+      "norm_label": "include"
+    },
+    {
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "frontend/vite.config.ts",
+      "source_location": "L1",
+      "id": "frontend_vite_config_ts",
+      "community": 15,
+      "norm_label": "vite.config.ts"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L1",
+      "id": "frontend_package_json",
+      "community": 2,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L2",
+      "id": "frontend_package_name",
+      "community": 2,
+      "norm_label": "name"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L3",
+      "id": "frontend_package_version",
+      "community": 2,
+      "norm_label": "version"
+    },
+    {
+      "label": "private",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L4",
+      "id": "frontend_package_private",
+      "community": 2,
+      "norm_label": "private"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L5",
+      "id": "frontend_package_type",
+      "community": 2,
+      "norm_label": "type"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L6",
+      "id": "frontend_package_scripts",
+      "community": 2,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "dev",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L7",
+      "id": "frontend_package_scripts_dev",
+      "community": 2,
+      "norm_label": "dev"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L8",
+      "id": "frontend_package_scripts_build",
+      "community": 2,
+      "norm_label": "build"
+    },
+    {
+      "label": "preview",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L9",
+      "id": "frontend_package_scripts_preview",
+      "community": 2,
+      "norm_label": "preview"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L11",
+      "id": "frontend_package_dependencies",
+      "community": 2,
+      "norm_label": "dependencies"
+    },
+    {
+      "label": "react",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L12",
+      "id": "frontend_package_dependencies_react",
+      "community": 2,
+      "norm_label": "react"
+    },
+    {
+      "label": "react-dom",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L13",
+      "id": "frontend_package_dependencies_react_dom",
+      "community": 2,
+      "norm_label": "react-dom"
+    },
+    {
+      "label": "react-router-dom",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L14",
+      "id": "frontend_package_dependencies_react_router_dom",
+      "community": 2,
+      "norm_label": "react-router-dom"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L16",
+      "id": "frontend_package_devdependencies",
+      "community": 2,
+      "norm_label": "devdependencies"
+    },
+    {
+      "label": "@types/react",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L17",
+      "id": "frontend_package_devdependencies_types_react",
+      "community": 2,
+      "norm_label": "@types/react"
+    },
+    {
+      "label": "@types/react-dom",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L18",
+      "id": "frontend_package_devdependencies_types_react_dom",
+      "community": 2,
+      "norm_label": "@types/react-dom"
+    },
+    {
+      "label": "@vitejs/plugin-react",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L19",
+      "id": "frontend_package_devdependencies_vitejs_plugin_react",
+      "community": 2,
+      "norm_label": "@vitejs/plugin-react"
+    },
+    {
+      "label": "typescript",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L20",
+      "id": "frontend_package_devdependencies_typescript",
+      "community": 2,
+      "norm_label": "typescript"
+    },
+    {
+      "label": "vite",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L21",
+      "id": "frontend_package_devdependencies_vite",
+      "community": 2,
+      "norm_label": "vite"
+    },
+    {
+      "label": "main.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/main.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_main_tsx",
+      "community": 0,
+      "norm_label": "main.tsx"
+    },
+    {
+      "label": "App.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_app_tsx",
+      "community": 0,
+      "norm_label": "app.tsx"
+    },
+    {
+      "label": "RequireAuth()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L6",
+      "id": "src_app_requireauth",
+      "community": 0,
+      "norm_label": "requireauth()"
+    },
+    {
+      "label": "RedirectIfAuthed()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L12",
+      "id": "src_app_redirectifauthed",
+      "community": 0,
+      "norm_label": "redirectifauthed()"
+    },
+    {
+      "label": "AppRoutes()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L18",
+      "id": "src_app_approutes",
+      "community": 0,
+      "norm_label": "approutes()"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L42",
+      "id": "src_app_app",
+      "community": 0,
+      "norm_label": "app()"
+    },
+    {
+      "label": "api.ts",
+      "file_type": "code",
+      "source_file": "frontend/src/api.ts",
+      "source_location": "L1",
+      "id": "frontend_src_api_ts",
+      "community": 0,
+      "norm_label": "api.ts"
+    },
+    {
+      "label": "apiPost()",
+      "file_type": "code",
+      "source_file": "frontend/src/api.ts",
+      "source_location": "L1",
+      "id": "src_api_apipost",
+      "community": 0,
+      "norm_label": "apipost()"
+    },
+    {
+      "label": "apiGet()",
+      "file_type": "code",
+      "source_file": "frontend/src/api.ts",
+      "source_location": "L13",
+      "id": "src_api_apiget",
+      "community": 0,
+      "norm_label": "apiget()"
+    },
+    {
+      "label": "vite-env.d.ts",
+      "file_type": "code",
+      "source_file": "frontend/src/vite-env.d.ts",
+      "source_location": "L1",
+      "id": "frontend_src_vite_env_d_ts",
+      "community": 16,
+      "norm_label": "vite-env.d.ts"
+    },
+    {
+      "label": "AuthContext.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_authcontext_tsx",
+      "community": 0,
+      "norm_label": "authcontext.tsx"
+    },
+    {
+      "label": "AuthState",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L10",
+      "id": "src_authcontext_authstate",
+      "community": 0,
+      "norm_label": "authstate"
+    },
+    {
+      "label": "AuthContext",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L17",
+      "id": "src_authcontext_authcontext",
+      "community": 0,
+      "norm_label": "authcontext"
+    },
+    {
+      "label": "AuthProvider()",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L19",
+      "id": "src_authcontext_authprovider",
+      "community": 0,
+      "norm_label": "authprovider()"
+    },
+    {
+      "label": "useAuth()",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L48",
+      "id": "src_authcontext_useauth",
+      "community": 0,
+      "norm_label": "useauth()"
+    },
+    {
+      "label": "Dashboard.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/Dashboard.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_pages_dashboard_tsx",
+      "community": 0,
+      "norm_label": "dashboard.tsx"
+    },
+    {
+      "label": "Dashboard()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/Dashboard.tsx",
+      "source_location": "L4",
+      "id": "pages_dashboard_dashboard",
+      "community": 0,
+      "norm_label": "dashboard()"
+    },
+    {
+      "label": "Login.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_pages_login_tsx",
+      "community": 0,
+      "norm_label": "login.tsx"
+    },
+    {
+      "label": "Login()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "L6",
+      "id": "pages_login_login",
+      "community": 0,
+      "norm_label": "login()"
+    },
+    {
+      "label": "tsconfig.json",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L1",
+      "id": "backend_tsconfig_json",
+      "community": 6,
+      "norm_label": "tsconfig.json"
+    },
+    {
+      "label": "compilerOptions",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L2",
+      "id": "backend_tsconfig_compileroptions",
+      "community": 6,
+      "norm_label": "compileroptions"
+    },
+    {
+      "label": "target",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L3",
+      "id": "backend_tsconfig_compileroptions_target",
+      "community": 6,
+      "norm_label": "target"
+    },
+    {
+      "label": "module",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L4",
+      "id": "backend_tsconfig_compileroptions_module",
+      "community": 6,
+      "norm_label": "module"
+    },
+    {
+      "label": "moduleResolution",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L5",
+      "id": "backend_tsconfig_compileroptions_moduleresolution",
+      "community": 6,
+      "norm_label": "moduleresolution"
+    },
+    {
+      "label": "rootDir",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L6",
+      "id": "backend_tsconfig_compileroptions_rootdir",
+      "community": 6,
+      "norm_label": "rootdir"
+    },
+    {
+      "label": "outDir",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L7",
+      "id": "backend_tsconfig_compileroptions_outdir",
+      "community": 6,
+      "norm_label": "outdir"
+    },
+    {
+      "label": "strict",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L8",
+      "id": "backend_tsconfig_compileroptions_strict",
+      "community": 6,
+      "norm_label": "strict"
+    },
+    {
+      "label": "esModuleInterop",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L9",
+      "id": "backend_tsconfig_compileroptions_esmoduleinterop",
+      "community": 6,
+      "norm_label": "esmoduleinterop"
+    },
+    {
+      "label": "skipLibCheck",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L10",
+      "id": "backend_tsconfig_compileroptions_skiplibcheck",
+      "community": 6,
+      "norm_label": "skiplibcheck"
+    },
+    {
+      "label": "resolveJsonModule",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L11",
+      "id": "backend_tsconfig_compileroptions_resolvejsonmodule",
+      "community": 6,
+      "norm_label": "resolvejsonmodule"
+    },
+    {
+      "label": "include",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L13",
+      "id": "backend_tsconfig_include",
+      "community": 6,
+      "norm_label": "include"
+    },
+    {
+      "label": "exclude",
+      "file_type": "code",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L14",
+      "id": "backend_tsconfig_exclude",
+      "community": 6,
+      "norm_label": "exclude"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L1",
+      "id": "backend_package_json",
+      "community": 1,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L2",
+      "id": "backend_package_name",
+      "community": 1,
+      "norm_label": "name"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L3",
+      "id": "backend_package_version",
+      "community": 1,
+      "norm_label": "version"
+    },
+    {
+      "label": "private",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L4",
+      "id": "backend_package_private",
+      "community": 1,
+      "norm_label": "private"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L5",
+      "id": "backend_package_type",
+      "community": 1,
+      "norm_label": "type"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L6",
+      "id": "backend_package_scripts",
+      "community": 1,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "dev",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L7",
+      "id": "backend_package_scripts_dev",
+      "community": 1,
+      "norm_label": "dev"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L8",
+      "id": "backend_package_scripts_build",
+      "community": 1,
+      "norm_label": "build"
+    },
+    {
+      "label": "start",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L9",
+      "id": "backend_package_scripts_start",
+      "community": 1,
+      "norm_label": "start"
+    },
+    {
+      "label": "migrate",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L10",
+      "id": "backend_package_scripts_migrate",
+      "community": 1,
+      "norm_label": "migrate"
+    },
+    {
+      "label": "create-user",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L11",
+      "id": "backend_package_scripts_create_user",
+      "community": 1,
+      "norm_label": "create-user"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L13",
+      "id": "backend_package_dependencies",
+      "community": 1,
+      "norm_label": "dependencies"
+    },
+    {
+      "label": "argon2",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L14",
+      "id": "backend_package_dependencies_argon2",
+      "community": 1,
+      "norm_label": "argon2"
+    },
+    {
+      "label": "cookie-parser",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L15",
+      "id": "backend_package_dependencies_cookie_parser",
+      "community": 1,
+      "norm_label": "cookie-parser"
+    },
+    {
+      "label": "dotenv",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L16",
+      "id": "backend_package_dependencies_dotenv",
+      "community": 1,
+      "norm_label": "dotenv"
+    },
+    {
+      "label": "express",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L17",
+      "id": "backend_package_dependencies_express",
+      "community": 1,
+      "norm_label": "express"
+    },
+    {
+      "label": "express-rate-limit",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L18",
+      "id": "backend_package_dependencies_express_rate_limit",
+      "community": 1,
+      "norm_label": "express-rate-limit"
+    },
+    {
+      "label": "express-session",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L19",
+      "id": "backend_package_dependencies_express_session",
+      "community": 1,
+      "norm_label": "express-session"
+    },
+    {
+      "label": "pg",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L20",
+      "id": "backend_package_dependencies_pg",
+      "community": 1,
+      "norm_label": "pg"
+    },
+    {
+      "label": "zod",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L21",
+      "id": "backend_package_dependencies_zod",
+      "community": 1,
+      "norm_label": "zod"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L23",
+      "id": "backend_package_devdependencies",
+      "community": 9,
+      "norm_label": "devdependencies"
+    },
+    {
+      "label": "@types/cookie-parser",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L24",
+      "id": "backend_package_devdependencies_types_cookie_parser",
+      "community": 9,
+      "norm_label": "@types/cookie-parser"
+    },
+    {
+      "label": "@types/express",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L25",
+      "id": "backend_package_devdependencies_types_express",
+      "community": 9,
+      "norm_label": "@types/express"
+    },
+    {
+      "label": "@types/express-session",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L26",
+      "id": "backend_package_devdependencies_types_express_session",
+      "community": 9,
+      "norm_label": "@types/express-session"
+    },
+    {
+      "label": "@types/node",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L27",
+      "id": "backend_package_devdependencies_types_node",
+      "community": 9,
+      "norm_label": "@types/node"
+    },
+    {
+      "label": "@types/pg",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L28",
+      "id": "backend_package_devdependencies_types_pg",
+      "community": 9,
+      "norm_label": "@types/pg"
+    },
+    {
+      "label": "tsx",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L29",
+      "id": "backend_package_devdependencies_tsx",
+      "community": 9,
+      "norm_label": "tsx"
+    },
+    {
+      "label": "typescript",
+      "file_type": "code",
+      "source_file": "backend/package.json",
+      "source_location": "L30",
+      "id": "backend_package_devdependencies_typescript",
+      "community": 9,
+      "norm_label": "typescript"
+    },
+    {
+      "label": "create-user.ts",
+      "file_type": "code",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L1",
+      "id": "backend_scripts_create_user_ts",
+      "community": 3,
+      "norm_label": "create-user.ts"
+    },
+    {
+      "label": "parseArgs()",
+      "file_type": "code",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L6",
+      "id": "scripts_create_user_parseargs",
+      "community": 3,
+      "norm_label": "parseargs()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L18",
+      "id": "scripts_create_user_main",
+      "community": 3,
+      "norm_label": "main()"
+    },
+    {
+      "label": "session.d.ts",
+      "file_type": "code",
+      "source_file": "backend/src/session.d.ts",
+      "source_location": "L1",
+      "id": "backend_src_session_d_ts",
+      "community": 14,
+      "norm_label": "session.d.ts"
+    },
+    {
+      "label": "SessionData",
+      "file_type": "code",
+      "source_file": "backend/src/session.d.ts",
+      "source_location": "L4",
+      "id": "src_session_d_sessiondata",
+      "community": 14,
+      "norm_label": "sessiondata"
+    },
+    {
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L1",
+      "id": "backend_src_index_ts",
+      "community": 3,
+      "norm_label": "index.ts"
+    },
+    {
+      "label": "app",
+      "file_type": "code",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L9",
+      "id": "src_index_app",
+      "community": 3,
+      "norm_label": "app"
+    },
+    {
+      "label": "start()",
+      "file_type": "code",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L42",
+      "id": "src_index_start",
+      "community": 3,
+      "norm_label": "start()"
+    },
+    {
+      "label": "auth.ts",
+      "file_type": "code",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L1",
+      "id": "backend_src_routes_auth_ts",
+      "community": 7,
+      "norm_label": "auth.ts"
+    },
+    {
+      "label": "router",
+      "file_type": "code",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L7",
+      "id": "routes_auth_router",
+      "community": 7,
+      "norm_label": "router"
+    },
+    {
+      "label": "loginLimiter",
+      "file_type": "code",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L9",
+      "id": "routes_auth_loginlimiter",
+      "community": 7,
+      "norm_label": "loginlimiter"
+    },
+    {
+      "label": "loginSchema",
+      "file_type": "code",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L17",
+      "id": "routes_auth_loginschema",
+      "community": 7,
+      "norm_label": "loginschema"
+    },
+    {
+      "label": "runMigrate.ts",
+      "file_type": "code",
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "L1",
+      "id": "backend_src_db_runmigrate_ts",
+      "community": 3,
+      "norm_label": "runmigrate.ts"
+    },
+    {
+      "label": "MIGRATIONS_DIR",
+      "file_type": "code",
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "L5",
+      "id": "db_runmigrate_migrations_dir",
+      "community": 3,
+      "norm_label": "migrations_dir"
+    },
+    {
+      "label": "migrate()",
+      "file_type": "code",
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "L7",
+      "id": "db_runmigrate_migrate",
+      "community": 3,
+      "norm_label": "migrate()"
+    },
+    {
+      "label": "pool.ts",
+      "file_type": "code",
+      "source_file": "backend/src/db/pool.ts",
+      "source_location": "L1",
+      "id": "backend_src_db_pool_ts",
+      "community": 3,
+      "norm_label": "pool.ts"
+    },
+    {
+      "label": "pool",
+      "file_type": "code",
+      "source_file": "backend/src/db/pool.ts",
+      "source_location": "L3",
+      "id": "db_pool_pool",
+      "community": 3,
+      "norm_label": "pool"
+    },
+    {
+      "label": "migrate.ts",
+      "file_type": "code",
+      "source_file": "backend/src/db/migrate.ts",
+      "source_location": "L1",
+      "id": "backend_src_db_migrate_ts",
+      "community": 3,
+      "norm_label": "migrate.ts"
+    },
+    {
+      "label": "requireAuth.ts",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/requireAuth.ts",
+      "source_location": "L1",
+      "id": "backend_src_middleware_requireauth_ts",
+      "community": 3,
+      "norm_label": "requireauth.ts"
+    },
+    {
+      "label": "requireAuth()",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/requireAuth.ts",
+      "source_location": "L3",
+      "id": "middleware_requireauth_requireauth",
+      "community": 3,
+      "norm_label": "requireauth()"
+    },
+    {
+      "label": "CLAUDE.md - Project Agent Instructions",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_md",
+      "community": 10,
+      "norm_label": "claude.md - project agent instructions"
+    },
+    {
+      "label": "CONTEXT.md - Domain Context: Climbing Training Tracker",
+      "file_type": "document",
+      "source_file": "CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_md",
+      "community": 10,
+      "norm_label": "context.md - domain context: climbing training tracker"
+    },
+    {
+      "label": "User - Account holder with email/password auth, no self-registration",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_user_concept",
+      "community": 11,
+      "norm_label": "user - account holder with email/password auth, no self-registration"
+    },
+    {
+      "label": "Exercise - Named physical activity in global shared library",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_exercise_concept",
+      "community": 4,
+      "norm_label": "exercise - named physical activity in global shared library"
+    },
+    {
+      "label": "Exercise Field - Named numeric metric belonging to an Exercise",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 13",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_exercise_field_concept",
+      "community": 4,
+      "norm_label": "exercise field - named numeric metric belonging to an exercise"
+    },
+    {
+      "label": "Category - Free-form grouping for Exercises",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 17",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_category_concept",
+      "community": 4,
+      "norm_label": "category - free-form grouping for exercises"
+    },
+    {
+      "label": "Week Template - Named config of training days, only one active at a time",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 19",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_week_template_concept",
+      "community": 4,
+      "norm_label": "week template - named config of training days, only one active at a time"
+    },
+    {
+      "label": "Training Day - Weekday within a Week Template with exercises or climbing flag",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 23",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_training_day_concept",
+      "community": 4,
+      "norm_label": "training day - weekday within a week template with exercises or climbing flag"
+    },
+    {
+      "label": "Training Day Exercise - Assignment of Exercise to Training Day in a Week Template",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 27",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_training_day_exercise_concept",
+      "community": 4,
+      "norm_label": "training day exercise - assignment of exercise to training day in a week template"
+    },
+    {
+      "label": "Training Session - Logged instance of a Training Day on a specific date",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 30",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_training_session_concept",
+      "community": 4,
+      "norm_label": "training session - logged instance of a training day on a specific date"
+    },
+    {
+      "label": "Training Session Exercise - Record of one Exercise in a Training Session",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 34",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_training_session_exercise_concept",
+      "community": 4,
+      "norm_label": "training session exercise - record of one exercise in a training session"
+    },
+    {
+      "label": "Grade - Difficulty level with name, integer difficulty, optional color",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 38",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_grade_concept",
+      "community": 4,
+      "norm_label": "grade - difficulty level with name, integer difficulty, optional color"
+    },
+    {
+      "label": "Climbing Session - Logged bouldering/climbing visit on a specific date",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 43",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_climbing_session_concept",
+      "community": 4,
+      "norm_label": "climbing session - logged bouldering/climbing visit on a specific date"
+    },
+    {
+      "label": "Climbing Session Entry - Single Grade attempted in a Climbing Session with sends/attempts",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 47",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_climbing_session_entry_concept",
+      "community": 4,
+      "norm_label": "climbing session entry - single grade attempted in a climbing session with sends/attempts"
+    },
+    {
+      "label": "Exercise Soft Delete - Archive instead of hard delete when log entries exist",
+      "file_type": "rationale",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 11",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_soft_delete_rationale",
+      "community": 4,
+      "norm_label": "exercise soft delete - archive instead of hard delete when log entries exist"
+    },
+    {
+      "label": "Exercise-Climbing Separation Boundary - Separate tracking concerns never mixed in same record",
+      "file_type": "rationale",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 45",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_exercise_climbing_boundary",
+      "community": 4,
+      "norm_label": "exercise-climbing separation boundary - separate tracking concerns never mixed in same record"
+    },
+    {
+      "label": "Week Template vs Training Session - Template is plan, Session is execution, changes not retroactive",
+      "file_type": "rationale",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 46",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_template_session_boundary",
+      "community": 4,
+      "norm_label": "week template vs training session - template is plan, session is execution, changes not retroactive"
+    },
+    {
+      "label": "No Self-Registration - Users created only via CLI seed script",
+      "file_type": "rationale",
+      "source_file": "CONTEXT.md",
+      "source_location": "line 6",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "context_no_self_registration_rationale",
+      "community": 11,
+      "norm_label": "no self-registration - users created only via cli seed script"
+    },
+    {
+      "label": "docker-compose.yml - Three-service deployment (db, backend, frontend)",
+      "file_type": "document",
+      "source_file": "docker-compose.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docker_compose_yml",
+      "community": 17,
+      "norm_label": "docker-compose.yml - three-service deployment (db, backend, frontend)"
+    },
+    {
+      "label": ".claude/settings.local.json - Local Claude Code permissions (gh, git checkout)",
+      "file_type": "document",
+      "source_file": ".claude/settings.local.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "settings_local_json",
+      "community": 18,
+      "norm_label": ".claude/settings.local.json - local claude code permissions (gh, git checkout)"
+    },
+    {
+      "label": "ralph-merger Agent - Merges PRs from RALPH loop workers with CI gating",
+      "file_type": "document",
+      "source_file": ".claude/agents/ralph-merger.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "agents_ralph_merger",
+      "community": 10,
+      "norm_label": "ralph-merger agent - merges prs from ralph loop workers with ci gating"
+    },
+    {
+      "label": "ralph-orchestrator Agent - Coordinates parallel issue implementation",
+      "file_type": "document",
+      "source_file": ".claude/agents/ralph-orchestrator.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "agents_ralph_orchestrator",
+      "community": 10,
+      "norm_label": "ralph-orchestrator agent - coordinates parallel issue implementation"
+    },
+    {
+      "label": "ralph-worker Agent - Implements a single GitHub issue in an isolated worktree",
+      "file_type": "document",
+      "source_file": ".claude/agents/ralph-worker.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "agents_ralph_worker",
+      "community": 10,
+      "norm_label": "ralph-worker agent - implements a single github issue in an isolated worktree"
+    },
+    {
+      "label": "RALPH Loop Skill - Recursive Autonomous Loop for Parallel Handling",
+      "file_type": "document",
+      "source_file": ".claude/skills/ralph-loop/SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "ralph_loop_skill",
+      "community": 10,
+      "norm_label": "ralph loop skill - recursive autonomous loop for parallel handling"
+    },
+    {
+      "label": "RALPH Loop Reference - Conflict handling, merge ordering, CI gating, labels",
+      "file_type": "document",
+      "source_file": ".claude/skills/ralph-loop/REFERENCE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "ralph_loop_reference",
+      "community": 10,
+      "norm_label": "ralph loop reference - conflict handling, merge ordering, ci gating, labels"
+    },
+    {
+      "label": "create-user.ts - CLI seed script to create user accounts (no self-registration)",
+      "file_type": "code",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "scripts_create_user",
+      "community": 11,
+      "norm_label": "create-user.ts - cli seed script to create user accounts (no self-registration)"
+    },
+    {
+      "label": "backend/src/index.ts - Express app entry point with session middleware",
+      "file_type": "code",
+      "source_file": "backend/src/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_index",
+      "community": 3,
+      "norm_label": "backend/src/index.ts - express app entry point with session middleware"
+    },
+    {
+      "label": "session.d.ts - Express session type augmentation adding userId to SessionData",
+      "file_type": "code",
+      "source_file": "backend/src/session.d.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_session_d",
+      "community": 11,
+      "norm_label": "session.d.ts - express session type augmentation adding userid to sessiondata"
+    },
+    {
+      "label": "db/migrate.ts - Standalone migration runner script (CLI entrypoint)",
+      "file_type": "code",
+      "source_file": "backend/src/db/migrate.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "db_migrate",
+      "community": 3,
+      "norm_label": "db/migrate.ts - standalone migration runner script (cli entrypoint)"
+    },
+    {
+      "label": "db/pool.ts - PostgreSQL connection pool singleton (DATABASE_URL)",
+      "file_type": "code",
+      "source_file": "backend/src/db/pool.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "db_pool",
+      "community": 3,
+      "norm_label": "db/pool.ts - postgresql connection pool singleton (database_url)"
+    },
+    {
+      "label": "runMigrate() - Applies pending SQL migrations from disk using schema_migrations table",
+      "file_type": "code",
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "db_run_migrate",
+      "community": 3,
+      "norm_label": "runmigrate() - applies pending sql migrations from disk using schema_migrations table"
+    },
+    {
+      "label": "001_initial.sql - Initial schema: all domain tables",
+      "file_type": "code",
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "migrations_001_initial",
+      "community": 4,
+      "norm_label": "001_initial.sql - initial schema: all domain tables"
+    },
+    {
+      "label": "requireAuth() - Express middleware: 401 if no session.userId",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/requireAuth.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "middleware_require_auth",
+      "community": 11,
+      "norm_label": "requireauth() - express middleware: 401 if no session.userid"
+    },
+    {
+      "label": "Session-Cookie Auth Pattern - httpOnly cookie, 7-day maxAge, argon2 hashing",
+      "file_type": "concept",
+      "source_file": "backend/src/index.ts",
+      "source_location": "line 19",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "session_auth_concept",
+      "community": 11,
+      "norm_label": "session-cookie auth pattern - httponly cookie, 7-day maxage, argon2 hashing"
+    },
+    {
+      "label": "POST /auth/login endpoint",
+      "file_type": "code",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 22",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "routes_auth_login_endpoint",
+      "community": 7,
+      "norm_label": "post /auth/login endpoint"
+    },
+    {
+      "label": "POST /auth/logout endpoint",
+      "file_type": "code",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 51",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "routes_auth_logout_endpoint",
+      "community": 7,
+      "norm_label": "post /auth/logout endpoint"
+    },
+    {
+      "label": "GET /auth/me endpoint",
+      "file_type": "code",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 62",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "routes_auth_me_endpoint",
+      "community": 7,
+      "norm_label": "get /auth/me endpoint"
+    },
+    {
+      "label": "Domain Docs Agent Skill",
+      "file_type": "document",
+      "source_file": "docs/agents/domain.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "agents_domain_domain_docs",
+      "community": 12,
+      "norm_label": "domain docs agent skill"
+    },
+    {
+      "label": "Issue Tracker Agent Skill (GitHub Issues)",
+      "file_type": "document",
+      "source_file": "docs/agents/issue-tracker.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "agents_issue_tracker_issue_tracker",
+      "community": 12,
+      "norm_label": "issue tracker agent skill (github issues)"
+    },
+    {
+      "label": "Triage Labels Configuration",
+      "file_type": "document",
+      "source_file": "docs/agents/triage-labels.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "agents_triage_labels_triage_labels",
+      "community": 12,
+      "norm_label": "triage labels configuration"
+    },
+    {
+      "label": "RequireAuth (route guard component)",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 6",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_app_require_auth",
+      "community": 0,
+      "norm_label": "requireauth (route guard component)"
+    },
+    {
+      "label": "RedirectIfAuthed (route guard component)",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 12",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_app_redirect_if_authed",
+      "community": 0,
+      "norm_label": "redirectifauthed (route guard component)"
+    },
+    {
+      "label": "AppRoutes (routing component)",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 18",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_app_app_routes",
+      "community": 0,
+      "norm_label": "approutes (routing component)"
+    },
+    {
+      "label": "AuthProvider (React context provider)",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 19",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_authcontext_auth_provider",
+      "community": 7,
+      "norm_label": "authprovider (react context provider)"
+    },
+    {
+      "label": "useAuth (custom hook)",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 48",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_authcontext_use_auth",
+      "community": 0,
+      "norm_label": "useauth (custom hook)"
+    },
+    {
+      "label": "AuthState (interface)",
+      "file_type": "code",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 11",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_authcontext_auth_state",
+      "community": 7,
+      "norm_label": "authstate (interface)"
+    },
+    {
+      "label": "apiPost (fetch wrapper)",
+      "file_type": "code",
+      "source_file": "frontend/src/api.ts",
+      "source_location": "line 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_api_api_post",
+      "community": 7,
+      "norm_label": "apipost (fetch wrapper)"
+    },
+    {
+      "label": "apiGet (fetch wrapper)",
+      "file_type": "code",
+      "source_file": "frontend/src/api.ts",
+      "source_location": "line 13",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_api_api_get",
+      "community": 7,
+      "norm_label": "apiget (fetch wrapper)"
+    },
+    {
+      "label": "main.tsx (React entry point)",
+      "file_type": "code",
+      "source_file": "frontend/src/main.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "src_main_main",
+      "community": 0,
+      "norm_label": "main.tsx (react entry point)"
+    },
+    {
+      "label": "handleSubmit (login form handler)",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "line 14",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "pages_login_handle_submit",
+      "community": 0,
+      "norm_label": "handlesubmit (login form handler)"
+    },
+    {
+      "label": "Session-based Authentication Pattern",
+      "file_type": "concept",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_session_based_auth",
+      "community": 7,
+      "norm_label": "session-based authentication pattern"
+    },
+    {
+      "label": "Frontend Auth Context Flow",
+      "file_type": "concept",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_frontend_auth_flow",
+      "community": 7,
+      "norm_label": "frontend auth context flow"
+    },
+    {
+      "label": "Route Protection via Auth Guards",
+      "file_type": "rationale",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_route_protection",
+      "community": 0,
+      "norm_label": "route protection via auth guards"
+    },
+    {
+      "label": "Triage Workflow for Issues",
+      "file_type": "concept",
+      "source_file": "docs/agents/triage-labels.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_triage_workflow",
+      "community": 12,
+      "norm_label": "triage workflow for issues"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "climbing_webapp_package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "climbing_webapp_package_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "climbing_webapp_package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "climbing_webapp_package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "climbing_webapp_package_scripts",
+      "target": "climbing_webapp_package_scripts_build",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "climbing_webapp_package_scripts",
+      "target": "climbing_webapp_package_scripts_create_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "climbing_webapp_package_scripts",
+      "target": "climbing_webapp_package_scripts_dev_backend",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "climbing_webapp_package_scripts",
+      "target": "climbing_webapp_package_scripts_dev_frontend",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "claude_settings_local_json",
+      "target": "claude_settings_local_permissions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "claude_settings_local_permissions",
+      "target": "claude_settings_local_permissions_allow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_json",
+      "target": "frontend_tsconfig_compileroptions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_json",
+      "target": "frontend_tsconfig_include",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_allowimportingtsextensions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_isolatedmodules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_jsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_lib",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_moduleresolution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_noemit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_resolvejsonmodule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_skiplibcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_strict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_target",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/tsconfig.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_usedefineforclassfields",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "frontend_package_json",
+      "target": "frontend_package_dependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "frontend_package_json",
+      "target": "frontend_package_devdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_package_json",
+      "target": "frontend_package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "frontend_package_json",
+      "target": "frontend_package_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_package_json",
+      "target": "frontend_package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "frontend_package_json",
+      "target": "frontend_package_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_package_json",
+      "target": "frontend_package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_package_scripts",
+      "target": "frontend_package_scripts_build",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "frontend_package_scripts",
+      "target": "frontend_package_scripts_dev",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "frontend_package_scripts",
+      "target": "frontend_package_scripts_preview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_react_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_react_router_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_types_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_types_react_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_typescript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_vite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_vitejs_plugin_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/main.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_main_tsx",
+      "target": "frontend_src_app_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "frontend_src_authcontext_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "frontend_src_pages_dashboard_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "frontend_src_pages_login_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "src_app_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "src_app_approutes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "src_app_redirectifauthed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "src_app_requireauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "src_authcontext_authprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_src_app_tsx",
+      "target": "src_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "src_app_requireauth",
+      "target": "src_authcontext_useauth"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_app_redirectifauthed",
+      "target": "src_authcontext_useauth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 46",
+      "weight": 1.0,
+      "source": "src_app_app",
+      "target": "src_app_app_routes"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 45",
+      "weight": 1.0,
+      "source": "src_app_app",
+      "target": "src_authcontext_auth_provider"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/main.tsx",
+      "source_location": "line 6",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "src_app_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/api.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "frontend_src_api_ts",
+      "target": "src_api_apiget",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/api.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "frontend_src_api_ts",
+      "target": "src_api_apipost",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_src_authcontext_tsx",
+      "target": "frontend_src_api_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_src_authcontext_tsx",
+      "target": "src_api_apipost",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_src_authcontext_tsx",
+      "target": "src_api_apiget",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "frontend_src_authcontext_tsx",
+      "target": "src_authcontext_authcontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "frontend_src_authcontext_tsx",
+      "target": "src_authcontext_authprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "frontend_src_authcontext_tsx",
+      "target": "src_authcontext_authstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "frontend_src_authcontext_tsx",
+      "target": "src_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Dashboard.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "frontend_src_pages_dashboard_tsx",
+      "target": "frontend_src_authcontext_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_pages_login_tsx",
+      "target": "frontend_src_authcontext_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Dashboard.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "frontend_src_pages_dashboard_tsx",
+      "target": "src_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_pages_login_tsx",
+      "target": "src_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/Dashboard.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "pages_dashboard_dashboard",
+      "target": "src_authcontext_useauth"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "pages_login_login",
+      "target": "src_authcontext_useauth"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Dashboard.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "frontend_src_pages_dashboard_tsx",
+      "target": "pages_dashboard_dashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/Dashboard.tsx",
+      "source_location": "line 5",
+      "weight": 1.0,
+      "source": "pages_dashboard_dashboard",
+      "target": "src_authcontext_use_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 28",
+      "weight": 1.0,
+      "source": "src_app_app_routes",
+      "target": "pages_dashboard_dashboard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_src_pages_login_tsx",
+      "target": "pages_login_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "pages_login_login",
+      "target": "src_authcontext_use_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 21",
+      "weight": 1.0,
+      "source": "src_app_app_routes",
+      "target": "pages_login_login"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "backend_tsconfig_json",
+      "target": "backend_tsconfig_compileroptions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "backend_tsconfig_json",
+      "target": "backend_tsconfig_exclude",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "backend_tsconfig_json",
+      "target": "backend_tsconfig_include",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_esmoduleinterop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_moduleresolution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_outdir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_resolvejsonmodule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_rootdir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_skiplibcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_strict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tsconfig.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_tsconfig_compileroptions",
+      "target": "backend_tsconfig_compileroptions_target",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "backend_package_json",
+      "target": "backend_package_dependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "backend_package_json",
+      "target": "backend_package_devdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "backend_package_json",
+      "target": "backend_package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_package_json",
+      "target": "backend_package_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "backend_package_json",
+      "target": "backend_package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_package_json",
+      "target": "backend_package_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_package_json",
+      "target": "backend_package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "backend_package_scripts",
+      "target": "backend_package_scripts_build",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "backend_package_scripts",
+      "target": "backend_package_scripts_create_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "backend_package_scripts",
+      "target": "backend_package_scripts_dev",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "backend_package_scripts",
+      "target": "backend_package_scripts_migrate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "backend_package_scripts",
+      "target": "backend_package_scripts_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_argon2",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_cookie_parser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_dotenv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_express",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_express_rate_limit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_express_session",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_pg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "backend_package_dependencies",
+      "target": "backend_package_dependencies_zod",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "backend_package_devdependencies",
+      "target": "backend_package_devdependencies_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "backend_package_devdependencies",
+      "target": "backend_package_devdependencies_types_cookie_parser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "backend_package_devdependencies",
+      "target": "backend_package_devdependencies_types_express",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "backend_package_devdependencies",
+      "target": "backend_package_devdependencies_types_express_session",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "backend_package_devdependencies",
+      "target": "backend_package_devdependencies_types_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "backend_package_devdependencies",
+      "target": "backend_package_devdependencies_types_pg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/package.json",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "backend_package_devdependencies",
+      "target": "backend_package_devdependencies_typescript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_scripts_create_user_ts",
+      "target": "backend_src_db_pool_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_scripts_create_user_ts",
+      "target": "backend_src_db_runmigrate_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "backend_scripts_create_user_ts",
+      "target": "scripts_create_user_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "backend_scripts_create_user_ts",
+      "target": "scripts_create_user_parseargs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "scripts_create_user_main",
+      "target": "scripts_create_user_parseargs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "line 29",
+      "weight": 1.0,
+      "source": "scripts_create_user_main",
+      "target": "db_pool"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "line 26",
+      "weight": 1.0,
+      "source": "scripts_create_user_main",
+      "target": "db_run_migrate"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": "line 18",
+      "weight": 1.0,
+      "source": "scripts_create_user_main",
+      "target": "scripts_create_user"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/session.d.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_src_session_d_ts",
+      "target": "src_session_d_sessiondata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "backend_src_index_ts",
+      "target": "backend_src_db_runmigrate_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "backend_src_index_ts",
+      "target": "backend_src_middleware_requireauth_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_src_index_ts",
+      "target": "backend_src_routes_auth_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "backend_src_index_ts",
+      "target": "middleware_requireauth_requireauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "backend_src_index_ts",
+      "target": "src_index_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/index.ts",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "backend_src_index_ts",
+      "target": "src_index_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/index.ts",
+      "source_location": "line 43",
+      "weight": 1.0,
+      "source": "src_index_start",
+      "target": "db_run_migrate"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/index.ts",
+      "source_location": "line 42",
+      "weight": 1.0,
+      "source": "src_index_start",
+      "target": "src_index"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_src_routes_auth_ts",
+      "target": "backend_src_db_pool_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "backend_src_routes_auth_ts",
+      "target": "routes_auth_loginlimiter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "backend_src_routes_auth_ts",
+      "target": "routes_auth_loginschema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "backend_src_routes_auth_ts",
+      "target": "routes_auth_router",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 22",
+      "weight": 1.0,
+      "source": "routes_auth_login_endpoint",
+      "target": "routes_auth_router"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 51",
+      "weight": 1.0,
+      "source": "routes_auth_logout_endpoint",
+      "target": "routes_auth_router"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 62",
+      "weight": 1.0,
+      "source": "routes_auth_me_endpoint",
+      "target": "routes_auth_router"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 22",
+      "weight": 1.0,
+      "source": "routes_auth_login_endpoint",
+      "target": "routes_auth_loginlimiter"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 23",
+      "weight": 1.0,
+      "source": "routes_auth_login_endpoint",
+      "target": "routes_auth_loginschema"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/db/migrate.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "backend_src_db_migrate_ts",
+      "target": "backend_src_db_runmigrate_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_db_runmigrate_ts",
+      "target": "backend_src_db_pool_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "backend_src_db_runmigrate_ts",
+      "target": "db_runmigrate_migrate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_src_db_runmigrate_ts",
+      "target": "db_runmigrate_migrations_dir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/db/migrate.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_db_migrate_ts",
+      "target": "backend_src_db_pool_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/db/pool.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_db_pool_ts",
+      "target": "db_pool_pool",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/middleware/requireAuth.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_middleware_requireauth_ts",
+      "target": "middleware_requireauth_requireauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "source": "claude_md",
+      "target": "context_md"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claude_md",
+      "target": "ralph_loop_skill"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 6",
+      "weight": 1.0,
+      "source": "context_no_self_registration_rationale",
+      "target": "context_user_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 1",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_user_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/scripts/create-user.ts",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "scripts_create_user",
+      "target": "context_user_concept"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "backend/src/index.ts",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "session_auth_concept",
+      "target": "context_user_concept"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 45",
+      "weight": 1.0,
+      "source": "context_exercise_climbing_boundary",
+      "target": "context_exercise_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "context_exercise_concept",
+      "target": "context_category_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "source": "context_exercise_field_concept",
+      "target": "context_exercise_concept"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 11",
+      "weight": 1.0,
+      "source": "context_soft_delete_rationale",
+      "target": "context_exercise_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 27",
+      "weight": 1.0,
+      "source": "context_training_day_exercise_concept",
+      "target": "context_exercise_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 34",
+      "weight": 1.0,
+      "source": "context_training_session_exercise_concept",
+      "target": "context_exercise_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_exercise_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 19",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_exercise_field_concept"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 46",
+      "weight": 1.0,
+      "source": "context_template_session_boundary",
+      "target": "context_week_template_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 23",
+      "weight": 1.0,
+      "source": "context_training_day_concept",
+      "target": "context_week_template_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 30",
+      "weight": 1.0,
+      "source": "context_training_session_concept",
+      "target": "context_week_template_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 36",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_week_template_concept"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 37",
+      "weight": 1.0,
+      "source": "context_training_day_concept",
+      "target": "context_climbing_session_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 27",
+      "weight": 1.0,
+      "source": "context_training_day_exercise_concept",
+      "target": "context_training_day_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 43",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_training_day_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 51",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_training_day_exercise_concept"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 46",
+      "weight": 1.0,
+      "source": "context_template_session_boundary",
+      "target": "context_training_session_concept"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 43",
+      "weight": 1.0,
+      "source": "context_training_session_concept",
+      "target": "context_climbing_session_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 34",
+      "weight": 1.0,
+      "source": "context_training_session_exercise_concept",
+      "target": "context_training_session_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 59",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_training_session_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 65",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_training_session_exercise_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 47",
+      "weight": 1.0,
+      "source": "context_climbing_session_entry_concept",
+      "target": "context_grade_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 28",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_grade_concept"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 47",
+      "weight": 1.0,
+      "source": "context_climbing_session_entry_concept",
+      "target": "context_climbing_session_concept"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 45",
+      "weight": 1.0,
+      "source": "context_exercise_climbing_boundary",
+      "target": "context_climbing_session_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 81",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_climbing_session_concept"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrations/001_initial.sql",
+      "source_location": "line 87",
+      "weight": 1.0,
+      "source": "migrations_001_initial",
+      "target": "context_climbing_session_entry_concept"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "CONTEXT.md",
+      "source_location": "line 6",
+      "weight": 1.0,
+      "source": "context_no_self_registration_rationale",
+      "target": "scripts_create_user"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/ralph-orchestrator.md",
+      "source_location": "line 41",
+      "weight": 1.0,
+      "source": "agents_ralph_orchestrator",
+      "target": "agents_ralph_merger"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/skills/ralph-loop/REFERENCE.md",
+      "source_location": "line 2",
+      "weight": 1.0,
+      "source": "ralph_loop_reference",
+      "target": "agents_ralph_merger"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/skills/ralph-loop/SKILL.md",
+      "source_location": "line 50",
+      "weight": 1.0,
+      "source": "ralph_loop_skill",
+      "target": "agents_ralph_merger"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/ralph-orchestrator.md",
+      "source_location": "line 27",
+      "weight": 1.0,
+      "source": "agents_ralph_orchestrator",
+      "target": "agents_ralph_worker"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/skills/ralph-loop/SKILL.md",
+      "source_location": "line 50",
+      "weight": 1.0,
+      "source": "ralph_loop_skill",
+      "target": "agents_ralph_orchestrator"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/skills/ralph-loop/REFERENCE.md",
+      "source_location": "line 27",
+      "weight": 1.0,
+      "source": "ralph_loop_reference",
+      "target": "agents_ralph_worker"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/skills/ralph-loop/SKILL.md",
+      "source_location": "line 50",
+      "weight": 1.0,
+      "source": "ralph_loop_skill",
+      "target": "agents_ralph_worker"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/skills/ralph-loop/SKILL.md",
+      "source_location": "line 57",
+      "weight": 1.0,
+      "source": "ralph_loop_skill",
+      "target": "ralph_loop_reference"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/index.ts",
+      "source_location": "line 36",
+      "weight": 1.0,
+      "source": "src_index",
+      "target": "middleware_require_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/middleware/requireAuth.ts",
+      "source_location": "line 4",
+      "weight": 1.0,
+      "source": "middleware_require_auth",
+      "target": "src_session_d"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "backend/src/index.ts",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "session_auth_concept",
+      "target": "src_session_d"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrate.ts",
+      "source_location": "line 14",
+      "weight": 1.0,
+      "source": "db_migrate",
+      "target": "db_pool"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/migrate.ts",
+      "source_location": "line 5",
+      "weight": 1.0,
+      "source": "db_migrate",
+      "target": "db_run_migrate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "db_run_migrate",
+      "target": "db_pool"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/db/runMigrate.ts",
+      "source_location": "line 5",
+      "weight": 1.0,
+      "source": "db_run_migrate",
+      "target": "migrations_001_initial"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "backend/src/index.ts",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "session_auth_concept",
+      "target": "middleware_require_auth"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 41",
+      "weight": 1.0,
+      "source": "routes_auth_login_endpoint",
+      "target": "concept_session_based_auth"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 31",
+      "weight": 0.95,
+      "source": "src_authcontext_auth_provider",
+      "target": "routes_auth_login_endpoint"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 51",
+      "weight": 1.0,
+      "source": "routes_auth_logout_endpoint",
+      "target": "concept_session_based_auth"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 37",
+      "weight": 0.95,
+      "source": "src_authcontext_auth_provider",
+      "target": "routes_auth_logout_endpoint"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": "line 62",
+      "weight": 1.0,
+      "source": "routes_auth_me_endpoint",
+      "target": "concept_session_based_auth"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 24",
+      "weight": 0.95,
+      "source": "src_authcontext_auth_provider",
+      "target": "routes_auth_me_endpoint"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "docs/agents/domain.md",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "agents_domain_domain_docs",
+      "target": "agents_issue_tracker_issue_tracker"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/agents/triage-labels.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "agents_triage_labels_triage_labels",
+      "target": "agents_issue_tracker_issue_tracker"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/agents/triage-labels.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "agents_triage_labels_triage_labels",
+      "target": "concept_triage_workflow"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 29",
+      "weight": 1.0,
+      "source": "src_app_app_routes",
+      "target": "src_app_require_auth"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 6",
+      "weight": 1.0,
+      "source": "src_app_require_auth",
+      "target": "concept_route_protection"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 7",
+      "weight": 1.0,
+      "source": "src_app_require_auth",
+      "target": "src_authcontext_use_auth"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 22",
+      "weight": 1.0,
+      "source": "src_app_app_routes",
+      "target": "src_app_redirect_if_authed"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 12",
+      "weight": 1.0,
+      "source": "src_app_redirect_if_authed",
+      "target": "concept_route_protection"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "source": "src_app_redirect_if_authed",
+      "target": "src_authcontext_use_auth"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "src_authcontext_auth_provider",
+      "target": "concept_frontend_auth_flow"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 24",
+      "weight": 1.0,
+      "source": "src_authcontext_auth_provider",
+      "target": "src_api_api_get"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 31",
+      "weight": 1.0,
+      "source": "src_authcontext_auth_provider",
+      "target": "src_api_api_post"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 19",
+      "weight": 1.0,
+      "source": "src_authcontext_auth_provider",
+      "target": "src_authcontext_auth_state"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/AuthContext.tsx",
+      "source_location": "line 49",
+      "weight": 1.0,
+      "source": "src_authcontext_use_auth",
+      "target": "src_authcontext_auth_provider"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/pages/Login.tsx",
+      "source_location": "line 19",
+      "weight": 1.0,
+      "source": "pages_login_handle_submit",
+      "target": "src_authcontext_use_auth"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "backend/src/routes/auth.ts",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "concept_session_based_auth",
+      "target": "concept_frontend_auth_flow"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "ralph_loop_agent_pipeline",
+      "label": "RALPH Loop Agent Pipeline - orchestrator spawns workers, merger merges PRs",
+      "nodes": [
+        "agents_ralph_orchestrator",
+        "agents_ralph_worker",
+        "agents_ralph_merger"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/skills/ralph-loop/SKILL.md"
+    },
+    {
+      "id": "backend_startup_migration_flow",
+      "label": "Backend Startup Flow - index calls migrate then listens using pool",
+      "nodes": [
+        "src_index_start",
+        "db_run_migrate",
+        "db_pool"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "backend/src/index.ts"
+    },
+    {
+      "id": "domain_training_plan_execution",
+      "label": "Training Plan-to-Execution Model - Week Template drives Sessions via Training Days",
+      "nodes": [
+        "context_week_template_concept",
+        "context_training_day_concept",
+        "context_training_session_concept",
+        "context_training_day_exercise_concept",
+        "context_training_session_exercise_concept"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "auth_fullstack_flow",
+      "label": "Full-Stack Authentication Flow (backend routes + frontend context + API client)",
+      "nodes": [
+        "routes_auth_login_endpoint",
+        "routes_auth_logout_endpoint",
+        "routes_auth_me_endpoint",
+        "src_authcontext_auth_provider",
+        "src_api_api_post",
+        "src_api_api_get"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "frontend/src/AuthContext.tsx"
+    },
+    {
+      "id": "route_protection_pattern",
+      "label": "Route Protection Pattern (guards + auth context + routing)",
+      "nodes": [
+        "src_app_require_auth",
+        "src_app_redirect_if_authed",
+        "src_authcontext_use_auth",
+        "src_app_app_routes"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.tsx"
+    },
+    {
+      "id": "agent_workflow_docs",
+      "label": "Agent Workflow Documentation (domain + issue tracker + triage labels)",
+      "nodes": [
+        "agents_domain_domain_docs",
+        "agents_issue_tracker_issue_tracker",
+        "agents_triage_labels_triage_labels"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "docs/agents/domain.md"
+    }
+  ],
+  "built_at_commit": "f529be40583e737e429cb79dfc89c77c19c07f68"
+}

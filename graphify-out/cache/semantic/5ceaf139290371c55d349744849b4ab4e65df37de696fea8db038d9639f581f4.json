@@ -1,0 +1,1 @@
+{"nodes": [{"id": "agents_ralph_worker", "label": "ralph-worker Agent - Implements a single GitHub issue in an isolated worktree", "file_type": "document", "source_file": ".claude/agents/ralph-worker.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

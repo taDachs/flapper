@@ -1,0 +1,1 @@
+{"nodes": [{"id": "agents_ralph_merger", "label": "ralph-merger Agent - Merges PRs from RALPH loop workers with CI gating", "file_type": "document", "source_file": ".claude/agents/ralph-merger.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}
