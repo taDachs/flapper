@@ -305,6 +305,7 @@ export default function ClimbingSessions() {
                             className={styles.input}
                             value={entryGradeId}
                             onChange={(e) => setEntryGradeId(e.target.value)}
+                            onMouseDown={(e) => e.stopPropagation()}
                           >
                             {grades.map((g) => (
                               <option key={g.id} value={g.id}>

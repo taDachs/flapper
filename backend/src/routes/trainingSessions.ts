@@ -155,8 +155,19 @@ router.get("/for-date/:date", async (req, res) => {
     [userId, date]
   );
 
+  let needsSeed = false;
   if (existing.length > 0) {
     sessionId = existing[0].id;
+    // If the session already exists but has no exercises, re-seed from the
+    // active template. This handles the case where the session was created
+    // before a template was activated.
+    const { rows: exerciseCount } = await pool.query<{ count: string }>(
+      "SELECT COUNT(*) AS count FROM training_session_exercises WHERE session_id = $1",
+      [sessionId]
+    );
+    if (parseInt(exerciseCount[0].count, 10) === 0) {
+      needsSeed = true;
+    }
   } else {
     // Create the session
     const { rows: created } = await pool.query<{ id: number }>(
@@ -164,7 +175,10 @@ router.get("/for-date/:date", async (req, res) => {
       [userId, date, weekday]
     );
     sessionId = created[0].id;
+    needsSeed = true;
+  }
 
+  if (needsSeed) {
     // Pre-populate from active template for this weekday
     const { rows: templateDays } = await pool.query<{
       day_id: number;
