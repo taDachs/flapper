@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/src/index.js",
     "migrate": "tsx src/db/migrate.ts",
-    "create-user": "tsx scripts/create-user.ts"
+    "create-user": "tsx scripts/create-user.ts",
+    "seed-grades": "tsx scripts/seed-grades.ts"
   },
   "dependencies": {
     "argon2": "^0.41.1",

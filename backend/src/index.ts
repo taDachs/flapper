@@ -3,6 +3,7 @@ import express from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.js";
+import gradesRouter from "./routes/grades.js";
 import { requireAuth } from "./middleware/requireAuth.js";
 import migrate from "./db/runMigrate.js";
 
@@ -38,6 +39,8 @@ app.use("/api", requireAuth);
 app.get("/api/ping", (_req, res) => {
   res.json({ ok: true });
 });
+
+app.use("/api/grades", gradesRouter);
 
 async function start() {
   await migrate();

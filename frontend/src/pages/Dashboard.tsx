@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import styles from "./Dashboard.module.css";
 
@@ -8,6 +9,11 @@ export default function Dashboard() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Climbing Tracker</h1>
+        <nav className={styles.nav}>
+          <Link className={styles.navLink} to="/settings/grades">
+            Grades
+          </Link>
+        </nav>
         <button className={styles.logoutBtn} onClick={logout}>
           Sign out
         </button>

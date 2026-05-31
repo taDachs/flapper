@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import GradesSettings from "./pages/GradesSettings";
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   const { userId, loading } = useAuth();
@@ -31,6 +32,14 @@ function AppRoutes() {
         element={
           <RequireAuth>
             <Dashboard />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/settings/grades"
+        element={
+          <RequireAuth>
+            <GradesSettings />
           </RequireAuth>
         }
       />
