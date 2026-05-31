@@ -4,6 +4,7 @@
   padding: 0;
 }
 
+/* ── Dark palette (default / explicit dark) ─────────────────────────────── */
 :root {
   --bg: #111827;
   --surface: #1f2937;
@@ -13,6 +14,32 @@
   --accent: #3b82f6;
   --accent-hover: #2563eb;
   --error: #ef4444;
+}
+
+/* ── Light palette ──────────────────────────────────────────────────────── */
+:root[data-theme="light"] {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --error: #dc2626;
+}
+
+/* ── Auto mode: follow OS preference ───────────────────────────────────── */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --error: #dc2626;
+  }
 }
 
 body {
