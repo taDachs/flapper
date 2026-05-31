@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import GradesSettings from "./pages/GradesSettings";
 import ExerciseLibrary from "./pages/ExerciseLibrary";
+import ClimbingSessions from "./pages/ClimbingSessions";
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   const { userId, loading } = useAuth();
@@ -49,6 +50,14 @@ function AppRoutes() {
         element={
           <RequireAuth>
             <ExerciseLibrary />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/climbing"
+        element={
+          <RequireAuth>
+            <ClimbingSessions />
           </RequireAuth>
         }
       />
