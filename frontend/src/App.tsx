@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./AuthContext";
+import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import GradesSettings from "./pages/GradesSettings";
@@ -34,69 +35,21 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/"
         element={
           <RequireAuth>
-            <Dashboard />
+            <Layout />
           </RequireAuth>
         }
-      />
-      <Route
-        path="/settings/grades"
-        element={
-          <RequireAuth>
-            <GradesSettings />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/exercises"
-        element={
-          <RequireAuth>
-            <ExerciseLibrary />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/climbing"
-        element={
-          <RequireAuth>
-            <ClimbingSessions />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/climbing/progress"
-        element={
-          <RequireAuth>
-            <ClimbingProgress />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/week-templates"
-        element={
-          <RequireAuth>
-            <WeekTemplates />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/training"
-        element={
-          <RequireAuth>
-            <TrainingSessions />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/training/progress"
-        element={
-          <RequireAuth>
-            <ExerciseProgress />
-          </RequireAuth>
-        }
-      />
+      >
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/settings/grades" element={<GradesSettings />} />
+        <Route path="/exercises" element={<ExerciseLibrary />} />
+        <Route path="/climbing" element={<ClimbingSessions />} />
+        <Route path="/climbing/progress" element={<ClimbingProgress />} />
+        <Route path="/week-templates" element={<WeekTemplates />} />
+        <Route path="/training" element={<TrainingSessions />} />
+        <Route path="/training/progress" element={<ExerciseProgress />} />
+      </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
