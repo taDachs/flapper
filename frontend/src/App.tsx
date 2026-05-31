@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import GradesSettings from "./pages/GradesSettings";
 import ExerciseLibrary from "./pages/ExerciseLibrary";
 import ClimbingSessions from "./pages/ClimbingSessions";
+import WeekTemplates from "./pages/WeekTemplates";
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   const { userId, loading } = useAuth();
@@ -58,6 +59,14 @@ function AppRoutes() {
         element={
           <RequireAuth>
             <ClimbingSessions />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/week-templates"
+        element={
+          <RequireAuth>
+            <WeekTemplates />
           </RequireAuth>
         }
       />

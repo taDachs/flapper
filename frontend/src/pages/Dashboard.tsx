@@ -16,6 +16,9 @@ export default function Dashboard() {
           <Link className={styles.navLink} to="/exercises">
             Exercises
           </Link>
+          <Link className={styles.navLink} to="/week-templates">
+            Templates
+          </Link>
           <Link className={styles.navLink} to="/settings/grades">
             Grades
           </Link>
