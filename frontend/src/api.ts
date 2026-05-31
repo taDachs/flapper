@@ -15,3 +15,25 @@ export async function apiGet(path: string) {
   if (!res.ok) throw new Error("Request failed");
   return res.json();
 }
+
+export async function apiPut(path: string, body: unknown) {
+  const res = await fetch(path, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? "Request failed");
+  return data;
+}
+
+export async function apiDelete(path: string) {
+  const res = await fetch(path, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? "Request failed");
+  return data;
+}
