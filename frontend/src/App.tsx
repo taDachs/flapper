@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import GradesSettings from "./pages/GradesSettings";
 import ExerciseLibrary from "./pages/ExerciseLibrary";
 import ClimbingSessions from "./pages/ClimbingSessions";
+import ClimbingProgress from "./pages/ClimbingProgress";
 import WeekTemplates from "./pages/WeekTemplates";
 import TrainingSessions from "./pages/TrainingSessions";
 
@@ -60,6 +61,14 @@ function AppRoutes() {
         element={
           <RequireAuth>
             <ClimbingSessions />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/climbing/progress"
+        element={
+          <RequireAuth>
+            <ClimbingProgress />
           </RequireAuth>
         }
       />

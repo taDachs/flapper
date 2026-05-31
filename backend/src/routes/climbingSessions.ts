@@ -16,6 +16,44 @@ const entryBodySchema = z.object({
   attempts: z.number().int().min(0),
 });
 
+// ── Progress ───────────────────────────────────────────────────────────────
+
+// GET /api/climbing-sessions/progress — flat list of all entries with session date & grade info
+// Returns entries sorted chronologically for chart rendering.
+router.get("/progress", async (req, res) => {
+  const userId = req.session.userId!;
+
+  const { rows } = await pool.query<{
+    session_id: number;
+    date: string;
+    entry_id: number;
+    grade_id: number;
+    grade_name: string;
+    grade_difficulty: number;
+    grade_color: string | null;
+    sends: number;
+    attempts: number;
+  }>(
+    `SELECT cs.id AS session_id,
+            cs.date::text AS date,
+            cse.id AS entry_id,
+            g.id AS grade_id,
+            g.name AS grade_name,
+            g.difficulty AS grade_difficulty,
+            g.color AS grade_color,
+            cse.sends,
+            cse.attempts
+     FROM climbing_session_entries cse
+     JOIN climbing_sessions cs ON cs.id = cse.climbing_session_id
+     JOIN grades g ON g.id = cse.grade_id
+     WHERE cs.user_id = $1
+     ORDER BY cs.date ASC, cs.id ASC, cse.id ASC`,
+    [userId]
+  );
+
+  res.json(rows);
+});
+
 // ── Sessions CRUD ──────────────────────────────────────────────────────────
 
 // GET /api/climbing-sessions — list all sessions with entries, reverse-chronological

@@ -16,6 +16,9 @@ export default function Dashboard() {
           <Link className={styles.navLink} to="/climbing">
             Climbing
           </Link>
+          <Link className={styles.navLink} to="/climbing/progress">
+            Progress
+          </Link>
           <Link className={styles.navLink} to="/exercises">
             Exercises
           </Link>

@@ -334,3 +334,145 @@ describe("Climbing Sessions API", () => {
     await deleteTestUser(emailOther);
   });
 });
+
+// ── Progress endpoint ─────────────────────────────────────────────────────
+
+describe("Climbing Progress API", () => {
+  const testEmail = `test-climbing-progress-${Date.now()}@example.com`;
+  let agent: ReturnType<typeof request.agent>;
+  let gradeBlauId: number;
+  let gradeRotId: number;
+
+  beforeAll(async () => {
+    await createTestUser(testEmail);
+    agent = await loginAgent(testEmail, "testpassword");
+
+    const blauRes = await agent
+      .post("/api/grades")
+      .send({ name: "blau", difficulty: 4, color: "#0000ff" })
+      .expect(201);
+    gradeBlauId = blauRes.body.id;
+
+    const rotRes = await agent
+      .post("/api/grades")
+      .send({ name: "rot", difficulty: 6, color: "#ff0000" })
+      .expect(201);
+    gradeRotId = rotRes.body.id;
+  });
+
+  afterAll(async () => {
+    await deleteTestUser(testEmail);
+  });
+
+  it("GET /api/climbing-sessions/progress returns empty array when no sessions exist", async () => {
+    const res = await agent.get("/api/climbing-sessions/progress").expect(200);
+    expect(res.body).toEqual([]);
+  });
+
+  it("GET /api/climbing-sessions/progress returns flat entries with session date and grade info", async () => {
+    // Create two sessions with entries
+    const s1 = await agent
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-10-01" })
+      .expect(201);
+    const s2 = await agent
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-10-15" })
+      .expect(201);
+
+    await agent
+      .post(`/api/climbing-sessions/${s1.body.id}/entries`)
+      .send({ grade_id: gradeBlauId, sends: 3, attempts: 5 })
+      .expect(201);
+    await agent
+      .post(`/api/climbing-sessions/${s2.body.id}/entries`)
+      .send({ grade_id: gradeRotId, sends: 1, attempts: 4 })
+      .expect(201);
+
+    const res = await agent.get("/api/climbing-sessions/progress").expect(200);
+    expect(res.body).toHaveLength(2);
+
+    const entry1 = res.body[0];
+    expect(entry1).toMatchObject({
+      date: "2024-10-01",
+      grade_name: "blau",
+      grade_difficulty: 4,
+      sends: 3,
+      attempts: 5,
+    });
+    expect(entry1.grade_color).toBe("#0000ff");
+
+    const entry2 = res.body[1];
+    expect(entry2).toMatchObject({
+      date: "2024-10-15",
+      grade_name: "rot",
+      grade_difficulty: 6,
+      sends: 1,
+      attempts: 4,
+    });
+  });
+
+  it("GET /api/climbing-sessions/progress returns entries in chronological order", async () => {
+    const emailOrder = `test-progress-order-${Date.now()}@example.com`;
+    await createTestUser(emailOrder);
+    const agentOrder = await loginAgent(emailOrder, "testpassword");
+
+    const gradeRes = await agentOrder
+      .post("/api/grades")
+      .send({ name: "gelb", difficulty: 2, color: "#ffff00" })
+      .expect(201);
+    const gId = gradeRes.body.id;
+
+    const sA = await agentOrder
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-12-20" })
+      .expect(201);
+    const sB = await agentOrder
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-12-01" })
+      .expect(201);
+
+    await agentOrder
+      .post(`/api/climbing-sessions/${sA.body.id}/entries`)
+      .send({ grade_id: gId, sends: 1, attempts: 2 })
+      .expect(201);
+    await agentOrder
+      .post(`/api/climbing-sessions/${sB.body.id}/entries`)
+      .send({ grade_id: gId, sends: 2, attempts: 3 })
+      .expect(201);
+
+    const res = await agentOrder.get("/api/climbing-sessions/progress").expect(200);
+    const dates = res.body.map((e: { date: string }) => e.date);
+    expect(dates).toEqual(["2024-12-01", "2024-12-20"]);
+
+    await deleteTestUser(emailOrder);
+  });
+
+  it("GET /api/climbing-sessions/progress does not return other users' entries", async () => {
+    const emailOther = `test-progress-other-${Date.now()}@example.com`;
+    await createTestUser(emailOther);
+    const agentOther = await loginAgent(emailOther, "testpassword");
+
+    const gradeRes = await agentOther
+      .post("/api/grades")
+      .send({ name: "gruen", difficulty: 3, color: "#00ff00" })
+      .expect(201);
+    const gIdOther = gradeRes.body.id;
+
+    const sOther = await agentOther
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-11-01" })
+      .expect(201);
+    const entryRes = await agentOther
+      .post(`/api/climbing-sessions/${sOther.body.id}/entries`)
+      .send({ grade_id: gIdOther, sends: 1, attempts: 2 })
+      .expect(201);
+
+    // Our agent should not see other user's entries
+    const res = await agent.get("/api/climbing-sessions/progress").expect(200);
+    const found = res.body.find((e: { entry_id: number }) => e.entry_id === entryRes.body.id);
+    expect(found).toBeUndefined();
+
+    await deleteTestUser(emailOther);
+  });
+});
