@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { apiGet, apiPost, apiDelete } from "../api";
 import styles from "./ClimbingSessions.module.css";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -54,6 +55,10 @@ export default function ClimbingSessions() {
   // Action errors
   const [actionError, setActionError] = useState("");
 
+  // Confirmation dialog state
+  type ConfirmState = { message: string; onConfirm: () => void };
+  const [confirmState, setConfirmState] = useState<ConfirmState | null>(null);
+
   async function loadAll() {
     try {
       const [sessData, gradeData] = await Promise.all([
@@ -95,6 +100,11 @@ export default function ClimbingSessions() {
       setAddError("A date is required.");
       return;
     }
+    // Prevent duplicate: check if a session already exists for this date
+    if (sessions.some((s) => s.date === addDate)) {
+      setAddError("A session already exists for this date. Please open the existing session.");
+      return;
+    }
     setAddLoading(true);
     try {
       const newSession: ClimbingSession = await apiPost("/api/climbing-sessions", { date: addDate });
@@ -110,14 +120,20 @@ export default function ClimbingSessions() {
 
   // ── Delete session ────────────────────────────────────────────────────
 
-  async function handleDeleteSession(session: ClimbingSession) {
-    setActionError("");
-    try {
-      await apiDelete(`/api/climbing-sessions/${session.id}`);
-      setSessions((prev) => prev.filter((s) => s.id !== session.id));
-    } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to delete session.");
-    }
+  function handleDeleteSession(session: ClimbingSession) {
+    setConfirmState({
+      message: `Delete the climbing session for ${session.date}? This will also remove all its entries.`,
+      onConfirm: async () => {
+        setConfirmState(null);
+        setActionError("");
+        try {
+          await apiDelete(`/api/climbing-sessions/${session.id}`);
+          setSessions((prev) => prev.filter((s) => s.id !== session.id));
+        } catch (err) {
+          setActionError(err instanceof Error ? err.message : "Failed to delete session.");
+        }
+      },
+    });
   }
 
   // ── Add entry ─────────────────────────────────────────────────────────
@@ -146,6 +162,11 @@ export default function ClimbingSessions() {
 
     if (isNaN(gradeId) || isNaN(sends) || isNaN(attempts) || sends < 0 || attempts < 0) {
       setEntryError("Please fill in all fields with valid values.");
+      return;
+    }
+
+    if (sends > attempts) {
+      setEntryError("Sends cannot exceed attempts — you can't top more routes than you tried.");
       return;
     }
 
@@ -179,20 +200,26 @@ export default function ClimbingSessions() {
 
   // ── Delete entry ──────────────────────────────────────────────────────
 
-  async function handleDeleteEntry(sessionId: number, entryId: number) {
-    setActionError("");
-    try {
-      await apiDelete(`/api/climbing-sessions/${sessionId}/entries/${entryId}`);
-      setSessions((prev) =>
-        prev.map((s) =>
-          s.id === sessionId
-            ? { ...s, entries: s.entries.filter((e) => e.id !== entryId) }
-            : s
-        )
-      );
-    } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to delete entry.");
-    }
+  function handleDeleteEntry(sessionId: number, entryId: number) {
+    setConfirmState({
+      message: "Remove this climbing entry?",
+      onConfirm: async () => {
+        setConfirmState(null);
+        setActionError("");
+        try {
+          await apiDelete(`/api/climbing-sessions/${sessionId}/entries/${entryId}`);
+          setSessions((prev) =>
+            prev.map((s) =>
+              s.id === sessionId
+                ? { ...s, entries: s.entries.filter((e) => e.id !== entryId) }
+                : s
+            )
+          );
+        } catch (err) {
+          setActionError(err instanceof Error ? err.message : "Failed to delete entry.");
+        }
+      },
+    });
   }
 
   // ── Render ────────────────────────────────────────────────────────────
@@ -364,6 +391,14 @@ export default function ClimbingSessions() {
           );
         })}
       </div>
+      {/* Confirmation dialog */}
+      {confirmState && (
+        <ConfirmDialog
+          message={confirmState.message}
+          onConfirm={confirmState.onConfirm}
+          onCancel={() => setConfirmState(null)}
+        />
+      )}
     </div>
   );
 }
