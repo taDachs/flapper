@@ -9,7 +9,12 @@
     "start": "node dist/src/index.js",
     "migrate": "tsx src/db/migrate.ts",
     "create-user": "tsx scripts/create-user.ts",
-    "seed-grades": "tsx scripts/seed-grades.ts"
+    "seed-grades": "tsx scripts/seed-grades.ts",
+    "test": "vitest run"
+  },
+  "vitest": {
+    "environment": "node",
+    "setupFiles": ["dotenv/config"]
   },
   "dependencies": {
     "argon2": "^0.41.1",
@@ -27,7 +32,11 @@
     "@types/express-session": "^1.18.0",
     "@types/node": "^22.0.0",
     "@types/pg": "^8.11.6",
+    "@types/supertest": "^7.2.0",
+    "@vitest/coverage-v8": "^4.1.7",
+    "supertest": "^7.2.2",
     "tsx": "^4.16.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.7"
   }
 }

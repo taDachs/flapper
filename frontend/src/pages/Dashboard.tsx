@@ -10,6 +10,9 @@ export default function Dashboard() {
       <header className={styles.header}>
         <h1 className={styles.title}>Climbing Tracker</h1>
         <nav className={styles.nav}>
+          <Link className={styles.navLink} to="/exercises">
+            Exercises
+          </Link>
           <Link className={styles.navLink} to="/settings/grades">
             Grades
           </Link>
