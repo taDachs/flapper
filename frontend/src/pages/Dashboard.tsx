@@ -17,7 +17,10 @@ export default function Dashboard() {
             Climbing
           </Link>
           <Link className={styles.navLink} to="/climbing/progress">
-            Progress
+            Climbing Progress
+          </Link>
+          <Link className={styles.navLink} to="/training/progress">
+            Exercise Progress
           </Link>
           <Link className={styles.navLink} to="/exercises">
             Exercises
