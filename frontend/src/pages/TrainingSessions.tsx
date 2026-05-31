@@ -454,6 +454,7 @@ export default function TrainingSessions() {
                   className={styles.select}
                   value={addExId}
                   onChange={(e) => setAddExId(e.target.value)}
+                  onMouseDown={(e) => e.stopPropagation()}
                 >
                   <option value="">— select —</option>
                   {exercises.map((ex) => (

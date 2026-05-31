@@ -147,6 +147,70 @@ describe("Training Sessions API", () => {
     await deleteTestUser(email3);
   });
 
+  it("GET /api/training-sessions/for-date/:date re-seeds exercises into empty session when template is activated after session creation", async () => {
+    // Use the shared agent so no extra login is needed (rate limit stays within budget)
+    // Use a date that is isolated from other tests: 2026-07-06 is Monday (weekday=1)
+    const reseedDate = "2026-07-06";
+    const weekday = 1;
+
+    // Step 1: Access training page before a template is active — creates empty session
+    const res1 = await agent
+      .get(`/api/training-sessions/for-date/${reseedDate}`)
+      .expect(200);
+    expect(res1.body.exercises).toEqual([]);
+    const sessionId = res1.body.id;
+
+    // Step 2: Create an exercise and activate a template for Monday
+    const reseedEx = await agent
+      .post("/api/exercises")
+      .send({ name: `ReseedEx-${Date.now()}`, category: "strength" })
+      .expect(201);
+    const reseedExId = reseedEx.body.id as number;
+    await createActiveTemplate(agent, reseedExId, weekday);
+
+    // Step 3: Access the same training session again — it should now have exercises
+    const res2 = await agent
+      .get(`/api/training-sessions/for-date/${reseedDate}`)
+      .expect(200);
+    expect(res2.body.id).toBe(sessionId); // same session, not a new one
+    expect(res2.body.exercises.length).toBeGreaterThanOrEqual(1);
+    expect(res2.body.exercises[0].exercise_id).toBe(reseedExId);
+  });
+
+  it("GET /api/training-sessions/for-date/:date does not re-seed when session already has exercises", async () => {
+    // Use the shared agent; template is now active from the previous test.
+    // Use Tuesday so there are no template exercises for this weekday (template only has Mon)
+    // 2026-07-07 is Tuesday (weekday=2)
+    const noReseedDate = "2026-07-07";
+
+    // Create an extra exercise to manually add later
+    const extraEx = await agent
+      .post("/api/exercises")
+      .send({ name: `ExtraEx-${Date.now()}`, category: "strength" })
+      .expect(201);
+    const extraExId = extraEx.body.id as number;
+
+    // First access — session created with 0 exercises (no template for Tuesday)
+    const res1 = await agent
+      .get(`/api/training-sessions/for-date/${noReseedDate}`)
+      .expect(200);
+    expect(res1.body.exercises).toEqual([]);
+    const sessionId = res1.body.id;
+
+    // Manually add one exercise
+    await agent
+      .post(`/api/training-sessions/${sessionId}/exercises`)
+      .send({ exercise_id: extraExId })
+      .expect(201);
+
+    // Fetch again — should still have exactly 1 exercise (no double-seeding)
+    const res2 = await agent
+      .get(`/api/training-sessions/for-date/${noReseedDate}`)
+      .expect(200);
+    expect(res2.body.id).toBe(sessionId);
+    expect(res2.body.exercises.length).toBe(1);
+  });
+
   it("GET /api/training-sessions/for-date/:date rejects invalid date", async () => {
     await agent.get("/api/training-sessions/for-date/not-a-date").expect(400);
   });

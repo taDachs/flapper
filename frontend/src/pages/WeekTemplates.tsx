@@ -576,6 +576,7 @@ export default function WeekTemplates() {
                   onChange={(e) =>
                     setAddExState((s) => s && { ...s, exerciseId: e.target.value })
                   }
+                  onMouseDown={(e) => e.stopPropagation()}
                 >
                   <option value="">— select —</option>
                   {exercises.map((ex) => (
