@@ -1,7 +1,20 @@
 import { NavLink, Link, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth } from "../AuthContext";
+import { useTheme, Theme } from "../ThemeContext";
 import styles from "./Layout.module.css";
+
+const THEME_LABELS: Record<Theme, string> = {
+  light: "Light",
+  dark: "Dark",
+  auto: "Auto",
+};
+
+const THEME_ICONS: Record<Theme, string> = {
+  light: "☀️",
+  dark: "🌙",
+  auto: "🖥️",
+};
 
 const NAV_LINKS = [
   { to: "/training", label: "Training" },
@@ -35,6 +48,7 @@ function usePageTitle() {
 
 export default function Layout() {
   const { logout } = useAuth();
+  const { theme, cycleTheme } = useTheme();
   usePageTitle();
 
   return (
@@ -58,6 +72,14 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
+        <button
+          className={styles.themeToggleBtn}
+          onClick={cycleTheme}
+          title={`Theme: ${THEME_LABELS[theme]} — click to cycle`}
+          aria-label={`Current theme: ${THEME_LABELS[theme]}. Click to cycle theme.`}
+        >
+          {THEME_ICONS[theme]} {THEME_LABELS[theme]}
+        </button>
         <button className={styles.logoutBtn} onClick={logout}>
           Sign out
         </button>

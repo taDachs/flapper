@@ -8,6 +8,11 @@ vi.mock("../AuthContext", () => ({
   useAuth: () => ({ logout: vi.fn() }),
 }));
 
+// Mock ThemeContext so Layout can call useTheme()
+vi.mock("../ThemeContext", () => ({
+  useTheme: () => ({ theme: "auto", cycleTheme: vi.fn() }),
+}));
+
 // CSS modules return empty objects in jsdom
 vi.mock("./Layout.module.css", () => ({ default: {} }));
 
