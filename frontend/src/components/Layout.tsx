@@ -22,7 +22,7 @@ const NAV_LINKS = [
   { to: "/climbing/progress", label: "Climbing Progress" },
   { to: "/training/progress", label: "Exercise Progress" },
   { to: "/exercises", label: "Exercises" },
-  { to: "/week-templates", label: "Templates" },
+  { to: "/week-templates", label: "Week Plans" },
   { to: "/settings/grades", label: "Settings" },
 ];
 
@@ -32,7 +32,7 @@ const ROUTE_TITLES: { pattern: RegExp; title: string }[] = [
   { pattern: /^\/climbing\/progress/, title: "Climbing Progress" },
   { pattern: /^\/climbing/, title: "Climbing" },
   { pattern: /^\/exercises/, title: "Exercises" },
-  { pattern: /^\/week-templates/, title: "Templates" },
+  { pattern: /^\/week-templates/, title: "Week Plans" },
   { pattern: /^\/settings/, title: "Settings" },
   { pattern: /^\/$/, title: "Dashboard" },
 ];

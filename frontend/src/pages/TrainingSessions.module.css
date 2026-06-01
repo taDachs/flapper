@@ -9,6 +9,27 @@
   gap: 1.5rem;
 }
 
+/* ── Active week plan banner ──────────────────────────────────────────────── */
+
+.activePlanBanner {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+}
+
+.activePlanLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.activePlanLink:hover {
+  text-decoration: underline;
+}
+
 /* ── Date navigation ─────────────────────────────────────────────────────── */
 
 .dateNav {
