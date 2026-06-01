@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   LineChart,
   Line,
@@ -29,6 +30,23 @@ interface ExerciseProgress {
   exercise_id: number;
   exercise_name: string;
   fields: FieldProgress[];
+}
+
+interface ExerciseField {
+  id: number;
+  name: string;
+  unit: string | null;
+  display_order: number;
+}
+
+interface Exercise {
+  id: number;
+  name: string;
+  category: string;
+  description: string | null;
+  default_sets_reps: string | null;
+  archived_at: string | null;
+  fields: ExerciseField[];
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -94,13 +112,19 @@ function FieldChart({ field }: { field: FieldProgress }) {
   const maxTs = Math.max(...allTs);
   const paddingMs = 86400000; // 1 day padding
 
-  const yLabel = field.unit
-    ? `${field.field_name} (${field.unit})`
-    : field.field_name;
+  // Y-axis: base on actual data range with padding, not forced to 0
+  const allY = chartData.map((p) => p.y);
+  const minY = Math.min(...allY);
+  const maxY = Math.max(...allY);
+  const yRange = maxY - minY;
+  const yPadding = yRange === 0 ? Math.max(1, Math.abs(minY) * 0.1) : yRange * 0.15;
+  const yMin = minY - yPadding;
+  const yMax = maxY + yPadding;
 
   return (
     <div className={styles.chartBlock}>
-      <h4 className={styles.fieldHeading}>{yLabel}</h4>
+      {/* Show field name only; unit appears once on the Y-axis label */}
+      <h4 className={styles.fieldHeading}>{field.field_name}</h4>
       <div className={styles.chartWrap}>
         <ResponsiveContainer width="100%" height={220}>
           <LineChart
@@ -120,10 +144,11 @@ function FieldChart({ field }: { field: FieldProgress }) {
             />
             <YAxis
               dataKey="y"
+              domain={[yMin, yMax]}
               tick={{ fill: "var(--text-muted)", fontSize: 11 }}
               tickLine={{ stroke: "var(--border)" }}
               axisLine={{ stroke: "var(--border)" }}
-              width={48}
+              width={52}
               label={
                 field.unit
                   ? {
@@ -157,22 +182,89 @@ function FieldChart({ field }: { field: FieldProgress }) {
   );
 }
 
+// ── Exercise selector ──────────────────────────────────────────────────────
+
+interface ExerciseOption {
+  id: number;
+  name: string;
+}
+
+function ExerciseSelector({
+  options,
+  selectedId,
+  onChange,
+}: {
+  options: ExerciseOption[];
+  selectedId: number | null;
+  onChange: (id: number) => void;
+}) {
+  return (
+    <div className={styles.selectorRow}>
+      <label htmlFor="exercise-select" className={styles.selectorLabel}>
+        Exercise
+      </label>
+      <select
+        id="exercise-select"
+        className={styles.selector}
+        value={selectedId ?? ""}
+        onChange={(e) => onChange(Number(e.target.value))}
+      >
+        {options.map((opt) => (
+          <option key={opt.id} value={opt.id}>
+            {opt.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 // ── Page ───────────────────────────────────────────────────────────────────
 
 export default function ExerciseProgressPage() {
-  const [data, setData] = useState<ExerciseProgress[]>([]);
+  const [progressData, setProgressData] = useState<ExerciseProgress[]>([]);
+  const [allExercises, setAllExercises] = useState<Exercise[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
-    apiGet("/api/exercises/progress")
-      .then((d: ExerciseProgress[]) => {
-        setData(d);
+    Promise.all([
+      apiGet("/api/exercises/progress") as Promise<ExerciseProgress[]>,
+      apiGet("/api/exercises") as Promise<Exercise[]>,
+    ])
+      .then(([progress, exercises]) => {
+        setProgressData(progress);
+        setAllExercises(exercises);
         setLoadError("");
+        // Default to first exercise in progress data, then first exercise overall
+        if (progress.length > 0) {
+          setSelectedId(progress[0].exercise_id);
+        } else if (exercises.length > 0) {
+          setSelectedId(exercises[0].id);
+        }
       })
       .catch(() => {
         setLoadError("Failed to load exercise progress data.");
       });
   }, []);
+
+  // Build the exercise list for the selector: exercises that have logged fields
+  // come first (sorted by name), then exercises without any fields.
+  const selectorOptions: ExerciseOption[] = useMemo(() => {
+    return allExercises.map((ex) => ({ id: ex.id, name: ex.name }));
+  }, [allExercises]);
+
+  // Currently selected exercise details
+  const selectedExercise = useMemo(
+    () => allExercises.find((ex) => ex.id === selectedId) ?? null,
+    [allExercises, selectedId]
+  );
+
+  // Progress data for the selected exercise
+  const selectedProgress = useMemo(
+    () => progressData.find((ep) => ep.exercise_id === selectedId) ?? null,
+    [progressData, selectedId]
+  );
 
   if (loadError) {
     return (
@@ -183,7 +275,7 @@ export default function ExerciseProgressPage() {
     );
   }
 
-  if (data.length === 0) {
+  if (allExercises.length === 0 && progressData.length === 0) {
     return (
       <div className={styles.container}>
         <h2 className={styles.heading}>Exercise Progress</h2>
@@ -195,20 +287,55 @@ export default function ExerciseProgressPage() {
     );
   }
 
+  // Determine the state of the selected exercise
+  const hasNoFields =
+    selectedExercise !== null && selectedExercise.fields.length === 0;
+  const hasFieldsButNoData =
+    selectedExercise !== null &&
+    selectedExercise.fields.length > 0 &&
+    selectedProgress === null;
+  const hasData = selectedProgress !== null && selectedProgress.fields.length > 0;
+
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Exercise Progress</h2>
 
-      {data.map((ex) => (
-        <section key={ex.exercise_id} className={styles.exerciseSection}>
-          <h3 className={styles.exerciseHeading}>{ex.exercise_name}</h3>
+      {selectorOptions.length > 0 && (
+        <ExerciseSelector
+          options={selectorOptions}
+          selectedId={selectedId}
+          onChange={setSelectedId}
+        />
+      )}
+
+      {hasNoFields && (
+        <p className={styles.noFields} data-testid="no-fields-message">
+          This exercise has no numeric fields to track. Add fields (e.g. weight,
+          reps, duration) in the{" "}
+          <Link to="/exercises" className={styles.link}>
+            exercise library
+          </Link>{" "}
+          to start tracking progress.
+        </p>
+      )}
+
+      {hasFieldsButNoData && (
+        <p className={styles.empty} data-testid="no-data-message">
+          No data logged yet for this exercise. Complete a training session that
+          includes this exercise and fill in its field values to see progress
+          here.
+        </p>
+      )}
+
+      {hasData && (
+        <section className={styles.exerciseSection}>
           <div className={styles.fieldsGrid}>
-            {ex.fields.map((field) => (
+            {selectedProgress!.fields.map((field) => (
               <FieldChart key={field.field_id} field={field} />
             ))}
           </div>
         </section>
-      ))}
+      )}
     </div>
   );
 }
