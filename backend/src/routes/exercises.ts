@@ -129,9 +129,11 @@ router.get("/progress", async (req, res) => {
 
 // ── Exercise CRUD ──────────────────────────────────────────────────────────
 
-// GET /api/exercises — list all active exercises with their fields
+// GET /api/exercises — list exercises with their fields
+// Query param: includeArchived=true to include archived exercises
 router.get("/", async (req, res) => {
   const userId = req.session.userId!;
+  const includeArchived = req.query.includeArchived === "true";
 
   const { rows: exercises } = await pool.query<{
     id: number;
@@ -142,10 +144,15 @@ router.get("/", async (req, res) => {
     archived_at: string | null;
     created_at: string;
   }>(
-    `SELECT id, name, category, description, default_sets_reps, archived_at, created_at
-     FROM exercises
-     WHERE user_id = $1 AND archived_at IS NULL
-     ORDER BY category ASC, name ASC`,
+    includeArchived
+      ? `SELECT id, name, category, description, default_sets_reps, archived_at, created_at
+         FROM exercises
+         WHERE user_id = $1
+         ORDER BY category ASC, name ASC`
+      : `SELECT id, name, category, description, default_sets_reps, archived_at, created_at
+         FROM exercises
+         WHERE user_id = $1 AND archived_at IS NULL
+         ORDER BY category ASC, name ASC`,
     [userId]
   );
 
@@ -199,7 +206,8 @@ router.post("/", async (req, res) => {
   }
 
   const userId = req.session.userId!;
-  const { name, category, description, default_sets_reps } = result.data;
+  const { name, description, default_sets_reps } = result.data;
+  const category = result.data.category.toLowerCase();
 
   const { rows } = await pool.query<{ id: number; created_at: string }>(
     `INSERT INTO exercises (user_id, name, category, description, default_sets_reps)
@@ -235,7 +243,8 @@ router.put("/:id", async (req, res) => {
   }
 
   const userId = req.session.userId!;
-  const { name, category, description, default_sets_reps } = result.data;
+  const { name, description, default_sets_reps } = result.data;
+  const category = result.data.category.toLowerCase();
 
   const { rowCount } = await pool.query(
     `UPDATE exercises
@@ -270,6 +279,30 @@ router.post("/:id/archive", async (req, res) => {
 
   if (rowCount === 0) {
     res.status(404).json({ error: "Exercise not found or already archived" });
+    return;
+  }
+
+  res.json({ ok: true });
+});
+
+// POST /api/exercises/:id/unarchive — restore an archived exercise
+router.post("/:id/unarchive", async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  const userId = req.session.userId!;
+
+  const { rowCount } = await pool.query(
+    `UPDATE exercises SET archived_at = NULL
+     WHERE id = $1 AND user_id = $2 AND archived_at IS NOT NULL`,
+    [id, userId]
+  );
+
+  if (rowCount === 0) {
+    res.status(404).json({ error: "Exercise not found or not archived" });
     return;
   }
 

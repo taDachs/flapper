@@ -43,6 +43,20 @@
 .exerciseInfo {
   flex: 1;
   display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.exerciseNameRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.exerciseMeta {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
@@ -50,6 +64,41 @@
 
 .exerciseName {
   font-weight: 500;
+}
+
+.exerciseDescription {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.exerciseRowArchived {
+  opacity: 0.6;
+}
+
+.archivedBadge {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+}
+
+.archivedToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  cursor: pointer;
+  user-select: none;
 }
 
 .setsReps {
@@ -114,6 +163,16 @@
 
 .btnWarning:hover:not(:disabled) {
   background: #d97706;
+  color: #fff;
+}
+
+.btnSuccess {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.btnSuccess:hover:not(:disabled) {
+  background: #16a34a;
   color: #fff;
 }
 

@@ -27,6 +27,7 @@ interface Exercise {
 export default function ExerciseLibrary() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loadError, setLoadError] = useState("");
+  const [showArchived, setShowArchived] = useState(false);
 
   // Add form state
   const [addName, setAddName] = useState("");
@@ -59,7 +60,7 @@ export default function ExerciseLibrary() {
   type FieldEditState = { name: string; unit: string };
   const [editingField, setEditingField] = useState<{ id: number; state: FieldEditState } | null>(null);
 
-  // Action error (archive / delete)
+  // Action error (archive / delete / unarchive)
   const [actionError, setActionError] = useState("");
 
   // Confirmation dialog state
@@ -68,7 +69,8 @@ export default function ExerciseLibrary() {
 
   async function loadExercises() {
     try {
-      const data = await apiGet("/api/exercises");
+      const url = showArchived ? "/api/exercises?includeArchived=true" : "/api/exercises";
+      const data = await apiGet(url);
       setExercises(data);
       setLoadError("");
     } catch {
@@ -78,7 +80,14 @@ export default function ExerciseLibrary() {
 
   useEffect(() => {
     loadExercises();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showArchived]);
+
+  // ── Category list (for autocomplete) ─────────────────────────────────
+
+  const categoryList = Array.from(
+    new Set(exercises.map((e) => e.category).filter(Boolean))
+  ).sort();
 
   // ── Add exercise ──────────────────────────────────────────────────────
 
@@ -147,7 +156,7 @@ export default function ExerciseLibrary() {
     }
   }
 
-  // ── Archive / Delete ──────────────────────────────────────────────────
+  // ── Archive / Delete / Unarchive ──────────────────────────────────────
 
   function handleArchive(exercise: Exercise) {
     setConfirmState({
@@ -160,6 +169,22 @@ export default function ExerciseLibrary() {
           await loadExercises();
         } catch (err) {
           setActionError(err instanceof Error ? err.message : "Failed to archive exercise.");
+        }
+      },
+    });
+  }
+
+  function handleUnarchive(exercise: Exercise) {
+    setConfirmState({
+      message: `Restore "${exercise.name}"? It will become available again for new training days.`,
+      onConfirm: async () => {
+        setConfirmState(null);
+        setActionError("");
+        try {
+          await apiPost(`/api/exercises/${exercise.id}/unarchive`, {});
+          await loadExercises();
+        } catch (err) {
+          setActionError(err instanceof Error ? err.message : "Failed to unarchive exercise.");
         }
       },
     });
@@ -272,9 +297,27 @@ export default function ExerciseLibrary() {
       {loadError && <p className={styles.error}>{loadError}</p>}
       {actionError && <p className={styles.error}>{actionError}</p>}
 
-      {exercises.length === 0 && !loadError && (
+      {/* Archived toggle */}
+      <label className={styles.archivedToggle}>
+        <input
+          type="checkbox"
+          checked={showArchived}
+          onChange={(e) => setShowArchived(e.target.checked)}
+          aria-label="Show archived"
+        />
+        Show archived
+      </label>
+
+      {exercises.filter((e) => !e.archived_at).length === 0 && !loadError && (
         <p className={styles.empty}>No exercises yet. Add one below.</p>
       )}
+
+      {/* Category datalist for autocomplete */}
+      <datalist id="category-suggestions">
+        {categoryList.map((cat) => (
+          <option key={cat} value={cat} />
+        ))}
+      </datalist>
 
       {categories.map((category) => (
         <div key={category} className={styles.categorySection}>
@@ -283,31 +326,57 @@ export default function ExerciseLibrary() {
             {exercises
               .filter((e) => e.category === category)
               .map((exercise) => (
-                <div key={exercise.id} className={styles.exerciseRow}>
+                <div
+                  key={exercise.id}
+                  className={`${styles.exerciseRow} ${exercise.archived_at ? styles.exerciseRowArchived : ""}`}
+                >
                   <div className={styles.exerciseInfo}>
-                    <span className={styles.exerciseName}>{exercise.name}</span>
-                    {exercise.default_sets_reps && (
-                      <span className={styles.setsReps}>{exercise.default_sets_reps}</span>
-                    )}
-                    {exercise.fields.length > 0 && (
-                      <span className={styles.fieldBadge}>
-                        {exercise.fields.length} field{exercise.fields.length !== 1 ? "s" : ""}
-                      </span>
+                    <div className={styles.exerciseNameRow}>
+                      <span className={styles.exerciseName}>{exercise.name}</span>
+                      {exercise.archived_at && (
+                        <span className={styles.archivedBadge}>archived</span>
+                      )}
+                    </div>
+                    <div className={styles.exerciseMeta}>
+                      {exercise.default_sets_reps && (
+                        <span className={styles.setsReps}>{exercise.default_sets_reps}</span>
+                      )}
+                      {exercise.fields.length > 0 && (
+                        <span className={styles.fieldBadge}>
+                          {exercise.fields.length} field{exercise.fields.length !== 1 ? "s" : ""}
+                        </span>
+                      )}
+                    </div>
+                    {exercise.description && (
+                      <p className={styles.exerciseDescription}>{exercise.description}</p>
                     )}
                   </div>
                   <div className={styles.rowActions}>
-                    <button className={styles.btnSmall} onClick={() => openFields(exercise)}>
-                      Fields
-                    </button>
-                    <button className={styles.btnSmall} onClick={() => openEdit(exercise)}>
-                      Edit
-                    </button>
-                    <button
-                      className={`${styles.btnSmall} ${styles.btnWarning}`}
-                      onClick={() => handleArchive(exercise)}
-                    >
-                      Archive
-                    </button>
+                    {!exercise.archived_at && (
+                      <button className={styles.btnSmall} onClick={() => openFields(exercise)}>
+                        Fields
+                      </button>
+                    )}
+                    {!exercise.archived_at && (
+                      <button className={styles.btnSmall} onClick={() => openEdit(exercise)}>
+                        Edit
+                      </button>
+                    )}
+                    {exercise.archived_at ? (
+                      <button
+                        className={`${styles.btnSmall} ${styles.btnSuccess}`}
+                        onClick={() => handleUnarchive(exercise)}
+                      >
+                        Unarchive
+                      </button>
+                    ) : (
+                      <button
+                        className={`${styles.btnSmall} ${styles.btnWarning}`}
+                        onClick={() => handleArchive(exercise)}
+                      >
+                        Archive
+                      </button>
+                    )}
                     <button
                       className={`${styles.btnSmall} ${styles.btnDanger}`}
                       onClick={() => handleDelete(exercise)}
@@ -340,6 +409,7 @@ export default function ExerciseLibrary() {
               <label>Category</label>
               <input
                 className={styles.input}
+                list="category-suggestions"
                 value={addCategory}
                 onChange={(e) => setAddCategory(e.target.value)}
                 placeholder="e.g. strength"
@@ -392,6 +462,7 @@ export default function ExerciseLibrary() {
                   <label>Category</label>
                   <input
                     className={styles.input}
+                    list="category-suggestions"
                     value={editState.category}
                     onChange={(e) => setEditState((s) => s && { ...s, category: e.target.value })}
                     required
