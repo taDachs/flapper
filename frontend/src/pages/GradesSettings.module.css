@@ -172,6 +172,19 @@
   font-size: 0.875rem;
 }
 
+.helperText {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.presetSection {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 /* Modal overlay */
 .overlay {
   position: fixed;

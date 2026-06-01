@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import ClimbingSessions from "./ClimbingSessions";
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
@@ -40,8 +41,29 @@ function setupMocks() {
 }
 
 async function renderPage() {
-  const result = render(<ClimbingSessions />);
+  const result = render(
+    <MemoryRouter>
+      <ClimbingSessions />
+    </MemoryRouter>
+  );
   // Wait for data to load
+  await waitFor(() => {
+    expect(screen.getByText("2026-05-31")).toBeInTheDocument();
+  });
+  return result;
+}
+
+async function renderPageNoGrades() {
+  vi.mocked(apiGet).mockImplementation(async (path: string) => {
+    if (path === "/api/grades") return [];
+    if (path === "/api/climbing-sessions") return [mockSession];
+    return [];
+  });
+  const result = render(
+    <MemoryRouter>
+      <ClimbingSessions />
+    </MemoryRouter>
+  );
   await waitFor(() => {
     expect(screen.getByText("2026-05-31")).toBeInTheDocument();
   });
@@ -188,6 +210,23 @@ describe("ClimbingSessions — duplicate date warning", () => {
     await userEvent.click(screen.getByRole("button", { name: /add session/i }));
     await waitFor(() => {
       expect(apiPost).toHaveBeenCalledWith("/api/climbing-sessions", { date: "2026-06-10" });
+    });
+  });
+});
+
+describe("ClimbingSessions — no grades link", () => {
+  beforeEach(() => {
+    setupMocks();
+  });
+
+  it("shows 'No grades configured' as a link to /settings/grades when no grades exist", async () => {
+    await renderPageNoGrades();
+    // Expand the session to reveal the entry form with the grades message
+    await userEvent.click(screen.getByRole("button", { name: /\+ entry/i }));
+    await waitFor(() => {
+      const link = screen.getByRole("link", { name: /settings/i });
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveAttribute("href", "/settings/grades");
     });
   });
 });

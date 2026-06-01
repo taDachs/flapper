@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { apiGet, apiPost, apiDelete } from "../api";
 import styles from "./ClimbingSessions.module.css";
 import ConfirmDialog from "../components/ConfirmDialog";
@@ -381,7 +382,10 @@ export default function ClimbingSessions() {
                       </div>
                       {entryError && <p className={styles.error}>{entryError}</p>}
                       {grades.length === 0 && (
-                        <p className={styles.error}>No grades configured. Add grades in Settings first.</p>
+                        <p className={styles.error}>
+                          No grades configured.{" "}
+                          <Link to="/settings/grades">Add grades in Settings first.</Link>
+                        </p>
                       )}
                     </form>
                   )}
