@@ -191,6 +191,89 @@ describe("Exercise library API", () => {
     expect(res.body.error).toMatch(/not found/i);
   });
 
+  // ── Unarchive ─────────────────────────────────────────────────────────
+
+  it("POST /api/exercises/:id/unarchive restores an archived exercise to the active list", async () => {
+    const create = await agent
+      .post("/api/exercises")
+      .send({ name: "ToUnarchive", category: "stretch" })
+      .expect(201);
+    const id = create.body.id;
+
+    await agent.post(`/api/exercises/${id}/archive`).expect(200);
+
+    // Should not appear in active list
+    const listBefore = await agent.get("/api/exercises").expect(200);
+    expect(listBefore.body.find((e: { id: number }) => e.id === id)).toBeUndefined();
+
+    await agent.post(`/api/exercises/${id}/unarchive`).expect(200);
+
+    // Should reappear in active list
+    const listAfter = await agent.get("/api/exercises").expect(200);
+    const found = listAfter.body.find((e: { id: number }) => e.id === id);
+    expect(found).toBeDefined();
+    expect(found.archived_at).toBeNull();
+  });
+
+  it("POST /api/exercises/:id/unarchive returns 404 for unknown exercise", async () => {
+    const res = await agent.post("/api/exercises/999999/unarchive").expect(404);
+    expect(res.body.error).toMatch(/not found/i);
+  });
+
+  // ── Show archived ─────────────────────────────────────────────────────
+
+  it("GET /api/exercises?includeArchived=true includes archived exercises", async () => {
+    const email3 = `test-archived-${Date.now()}@example.com`;
+    await createTestUser(email3);
+    const agent3 = await loginAgent(email3, "testpassword");
+
+    const create = await agent3
+      .post("/api/exercises")
+      .send({ name: "ArchivedEx", category: "strength" })
+      .expect(201);
+    const id = create.body.id;
+
+    await agent3.post(`/api/exercises/${id}/archive`).expect(200);
+
+    // Without flag — not visible
+    const listActive = await agent3.get("/api/exercises").expect(200);
+    expect(listActive.body.find((e: { id: number }) => e.id === id)).toBeUndefined();
+
+    // With flag — visible and archived_at is set
+    const listAll = await agent3.get("/api/exercises?includeArchived=true").expect(200);
+    const found = listAll.body.find((e: { id: number }) => e.id === id);
+    expect(found).toBeDefined();
+    expect(found.archived_at).not.toBeNull();
+
+    await deleteTestUser(email3);
+  });
+
+  // ── Category normalisation ────────────────────────────────────────────
+
+  it("POST /api/exercises normalises category to lowercase", async () => {
+    const res = await agent
+      .post("/api/exercises")
+      .send({ name: "CasedExercise", category: "Strength" })
+      .expect(201);
+
+    expect(res.body.category).toBe("strength");
+  });
+
+  it("PUT /api/exercises/:id normalises category to lowercase on update", async () => {
+    const create = await agent
+      .post("/api/exercises")
+      .send({ name: "CaseUpdateEx", category: "strength" })
+      .expect(201);
+    const id = create.body.id;
+
+    const res = await agent
+      .put(`/api/exercises/${id}`)
+      .send({ name: "CaseUpdateEx", category: "FINGER" })
+      .expect(200);
+
+    expect(res.body.category).toBe("finger");
+  });
+
   // ── Hard delete ───────────────────────────────────────────────────────
 
   it("DELETE /api/exercises/:id hard-deletes an exercise with no log entries", async () => {
