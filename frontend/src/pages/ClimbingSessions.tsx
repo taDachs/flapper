@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiGet, apiPost, apiDelete } from "../api";
+import { apiGet, apiPost, apiDelete, apiPatch } from "../api";
 import styles from "./ClimbingSessions.module.css";
 import ConfirmDialog from "../components/ConfirmDialog";
 
@@ -45,6 +45,12 @@ export default function ClimbingSessions() {
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState("");
 
+  // Edit session date state
+  const [editDateSessionId, setEditDateSessionId] = useState<number | null>(null);
+  const [editDateValue, setEditDateValue] = useState("");
+  const [editDateLoading, setEditDateLoading] = useState(false);
+  const [editDateError, setEditDateError] = useState("");
+
   // Add entry form (per session)
   const [addEntrySessionId, setAddEntrySessionId] = useState<number | null>(null);
   const [entryGradeId, setEntryGradeId] = useState("");
@@ -52,6 +58,15 @@ export default function ClimbingSessions() {
   const [entryAttempts, setEntryAttempts] = useState("0");
   const [entryLoading, setEntryLoading] = useState(false);
   const [entryError, setEntryError] = useState("");
+
+  // Edit entry state
+  const [editEntryId, setEditEntryId] = useState<number | null>(null);
+  const [editEntrySessionId, setEditEntrySessionId] = useState<number | null>(null);
+  const [editEntryGradeId, setEditEntryGradeId] = useState("");
+  const [editEntrySends, setEditEntrySends] = useState("0");
+  const [editEntryAttempts, setEditEntryAttempts] = useState("0");
+  const [editEntryLoading, setEditEntryLoading] = useState(false);
+  const [editEntryError, setEditEntryError] = useState("");
 
   // Action errors
   const [actionError, setActionError] = useState("");
@@ -119,6 +134,48 @@ export default function ClimbingSessions() {
     }
   }
 
+  // ── Edit session date ─────────────────────────────────────────────────
+
+  function openEditDate(session: ClimbingSession) {
+    setEditDateSessionId(session.id);
+    setEditDateValue(session.date);
+    setEditDateError("");
+  }
+
+  function closeEditDate() {
+    setEditDateSessionId(null);
+    setEditDateError("");
+  }
+
+  async function handleEditDate(e: FormEvent) {
+    e.preventDefault();
+    if (editDateSessionId === null) return;
+    setEditDateError("");
+    if (!editDateValue) {
+      setEditDateError("A date is required.");
+      return;
+    }
+    // Prevent duplicate: check if another session already exists for this date
+    if (sessions.some((s) => s.date === editDateValue && s.id !== editDateSessionId)) {
+      setEditDateError("A session already exists for this date.");
+      return;
+    }
+    setEditDateLoading(true);
+    try {
+      const updated = await apiPatch(`/api/climbing-sessions/${editDateSessionId}`, { date: editDateValue });
+      setSessions((prev) =>
+        prev
+          .map((s) => (s.id === editDateSessionId ? { ...s, date: updated.date } : s))
+          .sort((a, b) => b.date.localeCompare(a.date))
+      );
+      closeEditDate();
+    } catch (err) {
+      setEditDateError(err instanceof Error ? err.message : "Failed to update date.");
+    } finally {
+      setEditDateLoading(false);
+    }
+  }
+
   // ── Delete session ────────────────────────────────────────────────────
 
   function handleDeleteSession(session: ClimbingSession) {
@@ -145,6 +202,9 @@ export default function ClimbingSessions() {
     setEntrySends("0");
     setEntryAttempts("0");
     setEntryError("");
+    // Close any open edit
+    setEditEntryId(null);
+    setEditEntrySessionId(null);
   }
 
   function closeAddEntry() {
@@ -196,6 +256,81 @@ export default function ClimbingSessions() {
       setEntryError(err instanceof Error ? err.message : "Failed to add entry.");
     } finally {
       setEntryLoading(false);
+    }
+  }
+
+  // ── Edit entry ────────────────────────────────────────────────────────
+
+  function openEditEntry(sessionId: number, entry: ClimbingEntry) {
+    setEditEntryId(entry.id);
+    setEditEntrySessionId(sessionId);
+    setEditEntryGradeId(String(entry.grade_id));
+    setEditEntrySends(String(entry.sends));
+    setEditEntryAttempts(String(entry.attempts));
+    setEditEntryError("");
+    // Close add entry form if open
+    setAddEntrySessionId(null);
+  }
+
+  function closeEditEntry() {
+    setEditEntryId(null);
+    setEditEntrySessionId(null);
+    setEditEntryError("");
+  }
+
+  async function handleEditEntry(e: FormEvent) {
+    e.preventDefault();
+    if (editEntryId === null || editEntrySessionId === null) return;
+    setEditEntryError("");
+
+    const gradeId = parseInt(editEntryGradeId, 10);
+    const sends = parseInt(editEntrySends, 10);
+    const attempts = parseInt(editEntryAttempts, 10);
+
+    if (isNaN(gradeId) || isNaN(sends) || isNaN(attempts) || sends < 0 || attempts < 0) {
+      setEditEntryError("Please fill in all fields with valid values.");
+      return;
+    }
+
+    if (sends > attempts) {
+      setEditEntryError("Sends cannot exceed attempts — you can't top more routes than you tried.");
+      return;
+    }
+
+    setEditEntryLoading(true);
+    try {
+      await apiPatch(
+        `/api/climbing-sessions/${editEntrySessionId}/entries/${editEntryId}`,
+        { grade_id: gradeId, sends, attempts }
+      );
+      // Attach grade info from local state
+      const grade = grades.find((g) => g.id === gradeId);
+      setSessions((prev) =>
+        prev.map((s) =>
+          s.id === editEntrySessionId
+            ? {
+                ...s,
+                entries: s.entries.map((en) =>
+                  en.id === editEntryId
+                    ? {
+                        ...en,
+                        grade_id: gradeId,
+                        grade_name: grade?.name ?? en.grade_name,
+                        grade_color: grade?.color ?? null,
+                        sends,
+                        attempts,
+                      }
+                    : en
+                ),
+              }
+            : s
+        )
+      );
+      closeEditEntry();
+    } catch (err) {
+      setEditEntryError(err instanceof Error ? err.message : "Failed to update entry.");
+    } finally {
+      setEditEntryLoading(false);
     }
   }
 
@@ -264,61 +399,187 @@ export default function ClimbingSessions() {
         )}
         {sessions.map((session) => {
           const isExpanded = expandedIds.has(session.id);
+          const isEditingDate = editDateSessionId === session.id;
+          const hasNoEntries = session.entries.length === 0;
           return (
-            <div key={session.id} className={styles.sessionCard}>
+            <div
+              key={session.id}
+              className={`${styles.sessionCard} ${hasNoEntries ? styles.sessionCardEmpty : ""}`}
+            >
               <div className={styles.sessionHeader}>
-                <button
-                  className={styles.expandBtn}
-                  onClick={() => toggleExpand(session.id)}
-                  aria-expanded={isExpanded}
-                >
-                  <span className={styles.expandIcon}>{isExpanded ? "▾" : "▸"}</span>
-                  <span className={styles.sessionDate}>{session.date}</span>
-                  <span className={styles.entryCount}>
-                    {session.entries.length} {session.entries.length === 1 ? "entry" : "entries"}
-                  </span>
-                </button>
-                <div className={styles.sessionActions}>
+                {isEditingDate ? (
+                  <form className={styles.editDateForm} onSubmit={handleEditDate}>
+                    <div className={styles.formRow}>
+                      <div className={styles.fieldGroup}>
+                        <label htmlFor={`edit-date-${session.id}`}>Date</label>
+                        <input
+                          id={`edit-date-${session.id}`}
+                          className={styles.input}
+                          type="date"
+                          value={editDateValue}
+                          onChange={(e) => setEditDateValue(e.target.value)}
+                          autoFocus
+                          required
+                        />
+                      </div>
+                      <button
+                        className={styles.btnPrimary}
+                        type="submit"
+                        disabled={editDateLoading}
+                      >
+                        {editDateLoading ? "Saving…" : "Save"}
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.btnSecondary}
+                        onClick={closeEditDate}
+                        disabled={editDateLoading}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    {editDateError && <p className={styles.error}>{editDateError}</p>}
+                  </form>
+                ) : (
                   <button
-                    className={styles.btnSmall}
-                    onClick={() => {
-                      if (!isExpanded) toggleExpand(session.id);
-                      openAddEntry(session.id);
-                    }}
+                    className={styles.expandBtn}
+                    onClick={() => toggleExpand(session.id)}
+                    aria-expanded={isExpanded}
                   >
-                    + Entry
+                    <span className={styles.expandIcon}>{isExpanded ? "▾" : "▸"}</span>
+                    <span className={styles.sessionDate}>{session.date}</span>
+                    <span className={styles.entryCount}>
+                      {session.entries.length} {session.entries.length === 1 ? "entry" : "entries"}
+                    </span>
+                    {hasNoEntries && (
+                      <span className={styles.emptyWarning} title="No entries — add some climbs">
+                        No entries
+                      </span>
+                    )}
                   </button>
-                  <button
-                    className={`${styles.btnSmall} ${styles.btnDanger}`}
-                    onClick={() => handleDeleteSession(session)}
-                  >
-                    Delete
-                  </button>
-                </div>
+                )}
+                {!isEditingDate && (
+                  <div className={styles.sessionActions}>
+                    <button
+                      className={styles.btnSmall}
+                      onClick={() => openEditDate(session)}
+                      title="Edit date"
+                    >
+                      Edit date
+                    </button>
+                    <button
+                      className={styles.btnSmall}
+                      onClick={() => {
+                        if (!isExpanded) toggleExpand(session.id);
+                        openAddEntry(session.id);
+                      }}
+                    >
+                      + Entry
+                    </button>
+                    <button
+                      className={`${styles.btnSmall} ${styles.btnDanger}`}
+                      onClick={() => handleDeleteSession(session)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
 
               {isExpanded && (
                 <div className={styles.sessionBody}>
                   {session.entries.length === 0 && (
-                    <p className={styles.emptyEntries}>No entries yet.</p>
+                    <p className={styles.emptyEntries}>
+                      No entries yet. Use "+ Entry" to log your climbs.
+                    </p>
                   )}
                   {session.entries.map((entry) => (
                     <div key={entry.id} className={styles.entryRow}>
-                      <span
-                        className={styles.gradeSwatch}
-                        style={{ background: entry.grade_color ?? "transparent" }}
-                        title={entry.grade_name}
-                      />
-                      <span className={styles.gradeName}>{entry.grade_name}</span>
-                      <span className={styles.entryStats}>
-                        {entry.sends} send{entry.sends !== 1 ? "s" : ""} / {entry.attempts} attempt{entry.attempts !== 1 ? "s" : ""}
-                      </span>
-                      <button
-                        className={`${styles.btnSmall} ${styles.btnDanger}`}
-                        onClick={() => handleDeleteEntry(session.id, entry.id)}
-                      >
-                        Remove
-                      </button>
+                      {editEntryId === entry.id ? (
+                        <form className={styles.editEntryForm} onSubmit={handleEditEntry}>
+                          <div className={styles.formRow}>
+                            <div className={styles.fieldGroup}>
+                              <label htmlFor={`edit-grade-${entry.id}`}>Grade</label>
+                              <select
+                                id={`edit-grade-${entry.id}`}
+                                className={styles.input}
+                                value={editEntryGradeId}
+                                onChange={(e) => setEditEntryGradeId(e.target.value)}
+                              >
+                                {grades.map((g) => (
+                                  <option key={g.id} value={g.id}>
+                                    {g.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className={styles.fieldGroup}>
+                              <label htmlFor={`edit-sends-${entry.id}`}>Sends</label>
+                              <input
+                                id={`edit-sends-${entry.id}`}
+                                className={`${styles.input} ${styles.inputSmall}`}
+                                type="number"
+                                min={0}
+                                value={editEntrySends}
+                                onChange={(e) => setEditEntrySends(e.target.value)}
+                              />
+                            </div>
+                            <div className={styles.fieldGroup}>
+                              <label htmlFor={`edit-attempts-${entry.id}`}>Attempts</label>
+                              <input
+                                id={`edit-attempts-${entry.id}`}
+                                className={`${styles.input} ${styles.inputSmall}`}
+                                type="number"
+                                min={0}
+                                value={editEntryAttempts}
+                                onChange={(e) => setEditEntryAttempts(e.target.value)}
+                              />
+                            </div>
+                            <button
+                              className={styles.btnPrimary}
+                              type="submit"
+                              disabled={editEntryLoading}
+                            >
+                              {editEntryLoading ? "Saving…" : "Save"}
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              onClick={closeEditEntry}
+                              disabled={editEntryLoading}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                          {editEntryError && <p className={styles.error}>{editEntryError}</p>}
+                        </form>
+                      ) : (
+                        <>
+                          <span
+                            className={styles.gradeSwatch}
+                            style={{
+                              background: entry.grade_color ?? "var(--border)",
+                            }}
+                            title={entry.grade_name}
+                          />
+                          <span className={styles.gradeName}>{entry.grade_name}</span>
+                          <span className={styles.entryStats}>
+                            {entry.sends} send{entry.sends !== 1 ? "s" : ""} / {entry.attempts} attempt{entry.attempts !== 1 ? "s" : ""}
+                          </span>
+                          <button
+                            className={styles.btnSmall}
+                            onClick={() => openEditEntry(session.id, entry)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className={`${styles.btnSmall} ${styles.btnDanger}`}
+                            onClick={() => handleDeleteEntry(session.id, entry.id)}
+                          >
+                            Remove
+                          </button>
+                        </>
+                      )}
                     </div>
                   ))}
 

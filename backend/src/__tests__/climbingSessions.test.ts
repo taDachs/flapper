@@ -313,6 +313,121 @@ describe("Climbing Sessions API", () => {
     expect(res.body.error).toMatch(/not found/i);
   });
 
+  // ── Edit session date ─────────────────────────────────────────────────
+
+  it("PATCH /api/climbing-sessions/:id updates the session date", async () => {
+    const sessionRes = await agent
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-09-10" })
+      .expect(201);
+    const sessionId = sessionRes.body.id;
+
+    const res = await agent
+      .patch(`/api/climbing-sessions/${sessionId}`)
+      .send({ date: "2024-09-15" })
+      .expect(200);
+
+    expect(res.body).toMatchObject({ id: sessionId, date: "2024-09-15" });
+
+    // Verify in the list
+    const listRes = await agent.get("/api/climbing-sessions").expect(200);
+    const found = listRes.body.find((s: { id: number }) => s.id === sessionId);
+    expect(found?.date).toBe("2024-09-15");
+  });
+
+  it("PATCH /api/climbing-sessions/:id rejects an invalid date", async () => {
+    const sessionRes = await agent
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-09-20" })
+      .expect(201);
+    const sessionId = sessionRes.body.id;
+
+    const res = await agent
+      .patch(`/api/climbing-sessions/${sessionId}`)
+      .send({ date: "not-a-date" })
+      .expect(400);
+    expect(res.body.error).toBe("Invalid request");
+  });
+
+  it("PATCH /api/climbing-sessions/:id returns 404 for unknown session", async () => {
+    const res = await agent
+      .patch("/api/climbing-sessions/999999")
+      .send({ date: "2024-09-25" })
+      .expect(404);
+    expect(res.body.error).toMatch(/not found/i);
+  });
+
+  // ── Edit entry ────────────────────────────────────────────────────────
+
+  it("PATCH /api/climbing-sessions/:sessionId/entries/:entryId updates an entry", async () => {
+    const sessionRes = await agent
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-10-10" })
+      .expect(201);
+    const sessionId = sessionRes.body.id;
+
+    const entryRes = await agent
+      .post(`/api/climbing-sessions/${sessionId}/entries`)
+      .send({ grade_id: gradeId, sends: 1, attempts: 3 })
+      .expect(201);
+    const entryId = entryRes.body.id;
+
+    const res = await agent
+      .patch(`/api/climbing-sessions/${sessionId}/entries/${entryId}`)
+      .send({ grade_id: gradeId, sends: 3, attempts: 5 })
+      .expect(200);
+
+    expect(res.body).toMatchObject({
+      id: entryId,
+      climbing_session_id: sessionId,
+      grade_id: gradeId,
+      sends: 3,
+      attempts: 5,
+    });
+
+    // Verify in the list
+    const listRes = await agent.get("/api/climbing-sessions").expect(200);
+    const session = listRes.body.find((s: { id: number }) => s.id === sessionId);
+    const entry = session?.entries.find((e: { id: number }) => e.id === entryId);
+    expect(entry?.sends).toBe(3);
+    expect(entry?.attempts).toBe(5);
+  });
+
+  it("PATCH /api/climbing-sessions/:sessionId/entries/:entryId rejects invalid data", async () => {
+    const sessionRes = await agent
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-10-12" })
+      .expect(201);
+    const sessionId = sessionRes.body.id;
+
+    const entryRes = await agent
+      .post(`/api/climbing-sessions/${sessionId}/entries`)
+      .send({ grade_id: gradeId, sends: 1, attempts: 2 })
+      .expect(201);
+    const entryId = entryRes.body.id;
+
+    // Missing grade_id
+    const res = await agent
+      .patch(`/api/climbing-sessions/${sessionId}/entries/${entryId}`)
+      .send({ sends: 2, attempts: 3 })
+      .expect(400);
+    expect(res.body.error).toBe("Invalid request");
+  });
+
+  it("PATCH /api/climbing-sessions/:sessionId/entries/:entryId returns 404 for unknown entry", async () => {
+    const sessionRes = await agent
+      .post("/api/climbing-sessions")
+      .send({ date: "2024-10-14" })
+      .expect(201);
+    const sessionId = sessionRes.body.id;
+
+    const res = await agent
+      .patch(`/api/climbing-sessions/${sessionId}/entries/999999`)
+      .send({ grade_id: gradeId, sends: 1, attempts: 2 })
+      .expect(404);
+    expect(res.body.error).toMatch(/not found/i);
+  });
+
   // ── Isolation: user can only see own sessions ─────────────────────────
 
   it("GET /api/climbing-sessions does not show sessions of other users", async () => {

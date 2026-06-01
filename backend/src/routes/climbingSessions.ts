@@ -140,6 +140,36 @@ router.post("/", async (req, res) => {
   res.status(201).json({ id: rows[0].id, date, entries: [] });
 });
 
+// PATCH /api/climbing-sessions/:id — update a session's date
+router.patch("/:id", async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  const result = sessionBodySchema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json({ error: "Invalid request", details: result.error.flatten() });
+    return;
+  }
+
+  const userId = req.session.userId!;
+  const { date } = result.data;
+
+  const { rowCount, rows } = await pool.query<{ id: number; date: string }>(
+    `UPDATE climbing_sessions SET date = $1 WHERE id = $2 AND user_id = $3 RETURNING id, date::text AS date`,
+    [date, id, userId]
+  );
+
+  if (rowCount === 0) {
+    res.status(404).json({ error: "Climbing session not found" });
+    return;
+  }
+
+  res.json({ id: rows[0].id, date: rows[0].date });
+});
+
 // DELETE /api/climbing-sessions/:id — delete a session (cascades to entries)
 router.delete("/:id", async (req, res) => {
   const id = parseInt(req.params.id, 10);
@@ -216,6 +246,73 @@ router.post("/:id/entries", async (req, res) => {
     grade_id,
     sends,
     attempts,
+  });
+});
+
+// PATCH /api/climbing-sessions/:sessionId/entries/:entryId — update an entry
+router.patch("/:sessionId/entries/:entryId", async (req, res) => {
+  const sessionId = parseInt(req.params.sessionId, 10);
+  const entryId = parseInt(req.params.entryId, 10);
+  if (isNaN(sessionId) || isNaN(entryId)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  const userId = req.session.userId!;
+
+  // Verify session ownership
+  const { rows: ownerRows } = await pool.query<{ id: number }>(
+    "SELECT id FROM climbing_sessions WHERE id = $1 AND user_id = $2",
+    [sessionId, userId]
+  );
+  if (ownerRows.length === 0) {
+    res.status(404).json({ error: "Climbing session not found" });
+    return;
+  }
+
+  const result = entryBodySchema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json({ error: "Invalid request", details: result.error.flatten() });
+    return;
+  }
+
+  const { grade_id, sends, attempts } = result.data;
+
+  // Verify grade belongs to this user
+  const { rows: gradeRows } = await pool.query<{ id: number }>(
+    "SELECT id FROM grades WHERE id = $1 AND user_id = $2",
+    [grade_id, userId]
+  );
+  if (gradeRows.length === 0) {
+    res.status(404).json({ error: "Grade not found" });
+    return;
+  }
+
+  const { rowCount, rows } = await pool.query<{
+    id: number;
+    climbing_session_id: number;
+    grade_id: number;
+    sends: number;
+    attempts: number;
+  }>(
+    `UPDATE climbing_session_entries
+     SET grade_id = $1, sends = $2, attempts = $3
+     WHERE id = $4 AND climbing_session_id = $5
+     RETURNING id, climbing_session_id, grade_id, sends, attempts`,
+    [grade_id, sends, attempts, entryId, sessionId]
+  );
+
+  if (rowCount === 0) {
+    res.status(404).json({ error: "Entry not found" });
+    return;
+  }
+
+  res.json({
+    id: rows[0].id,
+    climbing_session_id: rows[0].climbing_session_id,
+    grade_id: rows[0].grade_id,
+    sends: rows[0].sends,
+    attempts: rows[0].attempts,
   });
 });
 

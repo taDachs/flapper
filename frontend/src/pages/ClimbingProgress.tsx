@@ -97,7 +97,7 @@ function CustomTooltip({
   return (
     <div className={styles.tooltip}>
       <p className={styles.tooltipDate}>{p.date}</p>
-      <p className={styles.tooltipGrade}>{p.gradeName} (difficulty {p.y})</p>
+      <p className={styles.tooltipGrade}>{p.gradeName}</p>
       {isScatter && (
         <>
           <p className={styles.tooltipStat}>
@@ -280,21 +280,18 @@ export default function ClimbingProgress() {
                   tickLine={{ stroke: "var(--border)" }}
                   axisLine={{ stroke: "var(--border)" }}
                   width={52}
+                  label={{
+                    value: "Grade",
+                    angle: -90,
+                    position: "insideLeft",
+                    offset: 8,
+                    fill: "var(--text-muted)",
+                    fontSize: 12,
+                  }}
                 />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
 
-                {/* Render one Scatter series per outcome for distinct colors */}
-                {(["full-send", "partial-send", "attempt-only"] as Outcome[]).map((outcome) => (
-                  <Scatter
-                    key={outcome}
-                    name={OUTCOME_LABELS[outcome]}
-                    data={scatterData.filter((p) => p.outcome === outcome)}
-                    fill={OUTCOME_COLORS[outcome]}
-                    opacity={0.85}
-                  />
-                ))}
-
-                {/* Peak-send trend line */}
+                {/* Peak-send trend line rendered first so scatter dots appear on top */}
                 <Line
                   data={trendData}
                   dataKey="y"
@@ -307,6 +304,17 @@ export default function ClimbingProgress() {
                   legendType="line"
                   name="Peak sent grade"
                 />
+
+                {/* Render one Scatter series per outcome for distinct colors — after Line so dots render on top */}
+                {(["full-send", "partial-send", "attempt-only"] as Outcome[]).map((outcome) => (
+                  <Scatter
+                    key={outcome}
+                    name={OUTCOME_LABELS[outcome]}
+                    data={scatterData.filter((p) => p.outcome === outcome)}
+                    fill={OUTCOME_COLORS[outcome]}
+                    opacity={0.85}
+                  />
+                ))}
 
                 <Legend content={() => null} />
               </ComposedChart>
