@@ -138,8 +138,15 @@
 
 .daysGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .daysGrid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.75rem;
+  }
 }
 
 .dayCard {
@@ -379,6 +386,12 @@
 .empty {
   color: var(--text-muted);
   font-size: 0.875rem;
+}
+
+.activationFeedback {
+  color: var(--accent);
+  font-size: 0.875rem;
+  margin: 0;
 }
 
 /* ── Modal ───────────────────────────────────────────────────────────────── */

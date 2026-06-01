@@ -36,7 +36,7 @@ describe("Layout nav bar", () => {
     expect(screen.getByRole("link", { name: "Climbing" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Settings" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Exercises" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Templates" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Week Plans" })).toBeInTheDocument();
   });
 
   it("labels the settings link 'Settings' (not 'Grades')", () => {

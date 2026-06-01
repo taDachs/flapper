@@ -78,6 +78,9 @@ export default function WeekTemplates() {
   // Action error
   const [actionError, setActionError] = useState("");
 
+  // Activation feedback (brief success message)
+  const [activationMessage, setActivationMessage] = useState("");
+
   // Confirmation dialog state
   type ConfirmState = { message: string; onConfirm: () => void };
   const [confirmState, setConfirmState] = useState<ConfirmState | null>(null);
@@ -143,25 +146,35 @@ export default function WeekTemplates() {
 
   async function handleActivate(template: TemplateSummary) {
     setActionError("");
+    setActivationMessage("");
     try {
       await apiPost(`/api/week-templates/${template.id}/activate`, {});
       await loadTemplates();
-      if (selectedTemplate?.id === template.id) {
-        await loadTemplateDetail(template.id);
+      // Always reload the selected template detail so the ACTIVE badge reflects
+      // the new state — even if a different plan was open in the editor.
+      if (selectedTemplate) {
+        await loadTemplateDetail(selectedTemplate.id);
       }
+      setActivationMessage(`"${template.name}" is now the active week plan.`);
+      setTimeout(() => setActivationMessage(""), 4000);
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Failed to activate template.");
+      setActionError(err instanceof Error ? err.message : "Failed to activate week plan.");
     }
   }
 
   // ── Delete template ────────────────────────────────────────────────────
 
   function handleDelete(template: TemplateSummary) {
+    const isActive = template.is_active;
+    const warningPrefix = isActive
+      ? `"${template.name}" is the active week plan. Deleting it will leave you without an active plan. `
+      : "";
     setConfirmState({
-      message: `Delete the template "${template.name}"? This cannot be undone.`,
+      message: `${warningPrefix}Delete the week plan "${template.name}"? This cannot be undone.`,
       onConfirm: async () => {
         setConfirmState(null);
         setActionError("");
+        setActivationMessage("");
         try {
           await apiDelete(`/api/week-templates/${template.id}`);
           if (selectedTemplate?.id === template.id) {
@@ -169,7 +182,7 @@ export default function WeekTemplates() {
           }
           await loadTemplates();
         } catch (err) {
-          setActionError(err instanceof Error ? err.message : "Failed to delete template.");
+          setActionError(err instanceof Error ? err.message : "Failed to delete week plan.");
         }
       },
     });
@@ -339,13 +352,18 @@ export default function WeekTemplates() {
     <div className={styles.page}>
       {/* ── Template list ───────────────────────────────────────────── */}
       <aside className={styles.sidebar}>
-        <h2 className={styles.sidebarHeading}>Templates</h2>
+        <h2 className={styles.sidebarHeading}>Week Plans</h2>
 
         {loadError && <p className={styles.error}>{loadError}</p>}
         {actionError && <p className={styles.error}>{actionError}</p>}
+        {activationMessage && (
+          <p className={styles.activationFeedback} role="status">
+            {activationMessage}
+          </p>
+        )}
 
         {templates.length === 0 && !loadError && (
-          <p className={styles.empty}>No templates yet.</p>
+          <p className={styles.empty}>No week plans yet.</p>
         )}
 
         <div className={styles.templateList}>
@@ -385,11 +403,11 @@ export default function WeekTemplates() {
             className={styles.input}
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            placeholder="New template name…"
+            placeholder="New week plan name…"
           />
           {createError && <p className={styles.error}>{createError}</p>}
           <button className={styles.btnPrimary} type="submit" disabled={createLoading}>
-            {createLoading ? "Creating…" : "Create Template"}
+            {createLoading ? "Creating…" : "Create Week Plan"}
           </button>
         </form>
       </aside>
@@ -398,7 +416,7 @@ export default function WeekTemplates() {
       <main className={styles.editor}>
         {!selectedTemplate ? (
           <p className={styles.editorPlaceholder}>
-            Select a template on the left to edit it.
+            Select a week plan on the left to edit it.
           </p>
         ) : (
           <>
@@ -540,7 +558,7 @@ export default function WeekTemplates() {
       {renameTarget && (
         <div className={styles.overlay}>
           <div className={styles.modal}>
-            <h3 className={styles.modalHeading}>Rename Template</h3>
+            <h3 className={styles.modalHeading}>Rename Week Plan</h3>
             <form onSubmit={handleRenameSave}>
               <div className={styles.fieldGroup}>
                 <label>Name</label>

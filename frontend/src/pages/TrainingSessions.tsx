@@ -1,4 +1,5 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { apiGet, apiPatch, apiPost } from "../api";
 import styles from "./TrainingSessions.module.css";
 
@@ -46,6 +47,11 @@ interface SessionSummary {
   total_count: number;
 }
 
+interface ActivePlan {
+  id: number;
+  name: string;
+}
+
 // ── Constants ──────────────────────────────────────────────────────────────
 
 const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -81,6 +87,9 @@ export default function TrainingSessions() {
 
   // Date navigation
   const [currentDate, setCurrentDate] = useState(today);
+
+  // Active week plan
+  const [activePlan, setActivePlan] = useState<ActivePlan | null | undefined>(undefined);
 
   // Session for the current date
   const [session, setSession] = useState<TrainingSession | null>(null);
@@ -131,6 +140,17 @@ export default function TrainingSessions() {
     }
   }, []);
 
+  const loadActivePlan = useCallback(async () => {
+    try {
+      const templates: Array<{ id: number; name: string; is_active: boolean }> =
+        await apiGet("/api/week-templates");
+      const active = templates.find((t) => t.is_active) ?? null;
+      setActivePlan(active);
+    } catch {
+      setActivePlan(null);
+    }
+  }, []);
+
   const loadHistory = useCallback(async () => {
     setHistoryError("");
     try {
@@ -144,7 +164,8 @@ export default function TrainingSessions() {
   useEffect(() => {
     loadSession(currentDate);
     loadExercises();
-  }, [currentDate, loadSession, loadExercises]);
+    loadActivePlan();
+  }, [currentDate, loadSession, loadExercises, loadActivePlan]);
 
   // ── Date navigation ────────────────────────────────────────────────────
 
@@ -301,6 +322,27 @@ export default function TrainingSessions() {
 
   return (
     <div className={styles.page}>
+      {/* ── Active week plan banner ────────────────────────────────────── */}
+      {activePlan !== undefined && (
+        <div className={styles.activePlanBanner}>
+          {activePlan ? (
+            <span>
+              Week Plan:{" "}
+              <Link to="/week-templates" className={styles.activePlanLink}>
+                {activePlan.name}
+              </Link>
+            </span>
+          ) : (
+            <span>
+              No active week plan —{" "}
+              <Link to="/week-templates" className={styles.activePlanLink}>
+                set one up
+              </Link>
+            </span>
+          )}
+        </div>
+      )}
+
       {/* ── Date navigation ───────────────────────────────────────────── */}
       <div className={styles.dateNav}>
         <button className={styles.navBtn} onClick={() => navigate(-1)}>
