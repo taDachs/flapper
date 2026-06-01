@@ -17,6 +17,7 @@ const addExerciseSchema = z.object({
 const patchSessionExerciseSchema = z
   .object({
     completed: z.boolean().optional(),
+    sets_reps_note: z.string().nullable().optional(),
     field_values: z
       .array(
         z.object({
@@ -26,9 +27,16 @@ const patchSessionExerciseSchema = z
       )
       .optional(),
   })
-  .refine((d) => d.completed !== undefined || d.field_values !== undefined, {
-    message: "At least one of completed or field_values must be provided",
-  });
+  .refine(
+    (d) =>
+      d.completed !== undefined ||
+      d.field_values !== undefined ||
+      d.sets_reps_note !== undefined,
+    {
+      message:
+        "At least one of completed, sets_reps_note or field_values must be provided",
+    }
+  );
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -305,13 +313,23 @@ router.patch("/:sessionId/exercises/:seId", async (req, res) => {
   }
 
   const se = seRows[0];
-  const { completed, field_values } = result.data;
+  const { completed, sets_reps_note, field_values } = result.data;
 
-  // Update completed if provided
-  if (completed !== undefined) {
+  // Update completed and/or sets_reps_note if provided
+  if (completed !== undefined && sets_reps_note !== undefined) {
+    await pool.query(
+      "UPDATE training_session_exercises SET completed = $1, sets_reps_note = $2 WHERE id = $3",
+      [completed, sets_reps_note, seId]
+    );
+  } else if (completed !== undefined) {
     await pool.query(
       "UPDATE training_session_exercises SET completed = $1 WHERE id = $2",
       [completed, seId]
+    );
+  } else if (sets_reps_note !== undefined) {
+    await pool.query(
+      "UPDATE training_session_exercises SET sets_reps_note = $1 WHERE id = $2",
+      [sets_reps_note, seId]
     );
   }
 
@@ -330,6 +348,8 @@ router.patch("/:sessionId/exercises/:seId", async (req, res) => {
 
   // Return updated state
   const updatedCompleted = completed !== undefined ? completed : se.completed;
+  const updatedNote =
+    sets_reps_note !== undefined ? sets_reps_note : se.sets_reps_note;
   const { rows: fvRows } = await pool.query<FieldValueRow>(
     `SELECT id, session_exercise_id, field_id, value::text AS value
      FROM training_session_field_values
@@ -343,13 +363,58 @@ router.patch("/:sessionId/exercises/:seId", async (req, res) => {
     session_id: sessionId,
     exercise_id: se.exercise_id,
     completed: updatedCompleted,
-    sets_reps_note: se.sets_reps_note,
+    sets_reps_note: updatedNote,
     field_values: fvRows.map((fv) => ({
       id: fv.id,
       field_id: fv.field_id,
       value: fv.value,
     })),
   });
+});
+
+// ── DELETE /api/training-sessions/:sessionId/exercises/:seId — remove exercise ──
+
+router.delete("/:sessionId/exercises/:seId", async (req, res) => {
+  const sessionId = parseInt(req.params.sessionId, 10);
+  const seId = parseInt(req.params.seId, 10);
+  if (isNaN(sessionId) || isNaN(seId)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  const userId = req.session.userId!;
+
+  // Verify session ownership
+  const { rows: sessRows } = await pool.query<{ id: number }>(
+    "SELECT id FROM training_sessions WHERE id = $1 AND user_id = $2",
+    [sessionId, userId]
+  );
+  if (sessRows.length === 0) {
+    res.status(404).json({ error: "Training session not found" });
+    return;
+  }
+
+  // Verify session exercise belongs to this session
+  const { rows: seRows } = await pool.query<{ id: number }>(
+    "SELECT id FROM training_session_exercises WHERE id = $1 AND session_id = $2",
+    [seId, sessionId]
+  );
+  if (seRows.length === 0) {
+    res.status(404).json({ error: "Session exercise not found" });
+    return;
+  }
+
+  // Delete field values first (cascade not guaranteed)
+  await pool.query(
+    "DELETE FROM training_session_field_values WHERE session_exercise_id = $1",
+    [seId]
+  );
+  await pool.query(
+    "DELETE FROM training_session_exercises WHERE id = $1",
+    [seId]
+  );
+
+  res.json({ success: true });
 });
 
 export default router;

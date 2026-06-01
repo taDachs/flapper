@@ -391,4 +391,135 @@ describe("Training Sessions API", () => {
 
     await deleteTestUser(email10);
   });
+
+  // ── PATCH sets_reps_note ───────────────────────────────────────────────────
+  // Use the shared agent + unique future dates to stay within rate-limit budget
+
+  it("PATCH /api/training-sessions/:sessionId/exercises/:seId updates sets_reps_note", async () => {
+    // 2026-08-03 is a Monday (weekday=1); shared agent has an active Mon template
+    const noteDate = "2026-08-03";
+    const sessionRes = await agent
+      .get(`/api/training-sessions/for-date/${noteDate}`)
+      .expect(200);
+    const sessionId = sessionRes.body.id;
+
+    // Add an exercise manually if session is empty (template may not cover this date)
+    let seId: number;
+    if (sessionRes.body.exercises.length > 0) {
+      seId = sessionRes.body.exercises[0].id;
+    } else {
+      const ex = await agent
+        .post("/api/exercises")
+        .send({ name: `NoteEx-${Date.now()}`, category: "strength" })
+        .expect(201);
+      const added = await agent
+        .post(`/api/training-sessions/${sessionId}/exercises`)
+        .send({ exercise_id: ex.body.id })
+        .expect(201);
+      seId = added.body.id as number;
+    }
+
+    const res = await agent
+      .patch(`/api/training-sessions/${sessionId}/exercises/${seId}`)
+      .send({ sets_reps_note: "4×12" })
+      .expect(200);
+
+    expect(res.body.sets_reps_note).toBe("4×12");
+
+    // Verify it persists
+    const refetch = await agent
+      .get(`/api/training-sessions/for-date/${noteDate}`)
+      .expect(200);
+    const updatedSe = refetch.body.exercises.find((e: { id: number }) => e.id === seId);
+    expect(updatedSe.sets_reps_note).toBe("4×12");
+  });
+
+  it("PATCH /api/training-sessions/:sessionId/exercises/:seId can clear sets_reps_note to null", async () => {
+    // 2026-08-10 is a Monday — isolated from the previous test
+    const clearDate = "2026-08-10";
+    const sessionRes = await agent
+      .get(`/api/training-sessions/for-date/${clearDate}`)
+      .expect(200);
+    const sessionId = sessionRes.body.id;
+
+    let seId: number;
+    if (sessionRes.body.exercises.length > 0) {
+      seId = sessionRes.body.exercises[0].id;
+    } else {
+      const ex = await agent
+        .post("/api/exercises")
+        .send({ name: `ClearEx-${Date.now()}`, category: "strength" })
+        .expect(201);
+      const added = await agent
+        .post(`/api/training-sessions/${sessionId}/exercises`)
+        .send({ exercise_id: ex.body.id })
+        .expect(201);
+      seId = added.body.id as number;
+    }
+
+    // Set a note first
+    await agent
+      .patch(`/api/training-sessions/${sessionId}/exercises/${seId}`)
+      .send({ sets_reps_note: "3×10" })
+      .expect(200);
+
+    // Clear it
+    const res = await agent
+      .patch(`/api/training-sessions/${sessionId}/exercises/${seId}`)
+      .send({ sets_reps_note: null })
+      .expect(200);
+
+    expect(res.body.sets_reps_note).toBeNull();
+  });
+
+  // ── DELETE /api/training-sessions/:sessionId/exercises/:seId ──────────────
+
+  it("DELETE /api/training-sessions/:sessionId/exercises/:seId removes a session exercise", async () => {
+    // 2026-09-07 (Monday) — isolated date
+    const delDate = "2026-09-07";
+    const ex = await agent
+      .post("/api/exercises")
+      .send({ name: `DelEx-${Date.now()}`, category: "strength" })
+      .expect(201);
+
+    const sessionRes = await agent
+      .get(`/api/training-sessions/for-date/${delDate}`)
+      .expect(200);
+    const sessionId = sessionRes.body.id;
+
+    const added = await agent
+      .post(`/api/training-sessions/${sessionId}/exercises`)
+      .send({ exercise_id: ex.body.id })
+      .expect(201);
+    const seId = added.body.id as number;
+
+    // Delete the exercise from the session
+    const delRes = await agent
+      .delete(`/api/training-sessions/${sessionId}/exercises/${seId}`)
+      .expect(200);
+
+    expect(delRes.body.success).toBe(true);
+
+    // Verify exercise is gone
+    const refetch = await agent
+      .get(`/api/training-sessions/for-date/${delDate}`)
+      .expect(200);
+    const seIds = refetch.body.exercises.map((e: { id: number }) => e.id);
+    expect(seIds).not.toContain(seId);
+  });
+
+  it("DELETE /api/training-sessions/:sessionId/exercises/:seId returns 404 for non-existent exercise", async () => {
+    // 2026-09-14 (Monday) — isolated date
+    const del404Date = "2026-09-14";
+    const sessionRes = await agent
+      .get(`/api/training-sessions/for-date/${del404Date}`)
+      .expect(200);
+    const sessionId = sessionRes.body.id;
+
+    const res = await agent
+      .delete(`/api/training-sessions/${sessionId}/exercises/999999`)
+      .expect(404);
+
+    expect(res.body.error).toBe("Session exercise not found");
+  });
 });
