@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiGet, apiPatch, apiPost } from "../api";
+import { apiDelete, apiGet, apiPatch, apiPost } from "../api";
+import ConfirmDialog from "../components/ConfirmDialog";
 import styles from "./TrainingSessions.module.css";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -110,8 +111,14 @@ export default function TrainingSessions() {
   const [addExLoading, setAddExLoading] = useState(false);
   const [addExError, setAddExError] = useState("");
 
+  // Remove-exercise confirmation
+  const [removeSeId, setRemoveSeId] = useState<number | null>(null);
+
   // Inline field value editing (local state before auto-save)
   const [fieldInputs, setFieldInputs] = useState<Record<string, string>>({});
+
+  // Inline notes editing (local state before auto-save)
+  const [noteInputs, setNoteInputs] = useState<Record<string, string>>({});
 
   // ── Load session for a date ──────────────────────────────────────────────
 
@@ -119,6 +126,7 @@ export default function TrainingSessions() {
     setSessionError("");
     setSessionLoading(true);
     setFieldInputs({});
+    setNoteInputs({});
     try {
       const data: TrainingSession = await apiGet(
         `/api/training-sessions/for-date/${date}`
@@ -264,6 +272,71 @@ export default function TrainingSessions() {
     return fv ? fv.value : "";
   }
 
+  // ── Notes auto-save (debounced) ────────────────────────────────────────
+
+  const saveNote = useCallback(
+    async (sessionId: number, seId: number, note: string) => {
+      try {
+        const updated = await apiPatch(
+          `/api/training-sessions/${sessionId}/exercises/${seId}`,
+          { sets_reps_note: note }
+        );
+        setSession((s) =>
+          s
+            ? {
+                ...s,
+                exercises: s.exercises.map((e) =>
+                  e.id === seId
+                    ? { ...e, sets_reps_note: updated.sets_reps_note }
+                    : e
+                ),
+              }
+            : s
+        );
+      } catch {
+        // silently ignore — value stays in input
+      }
+    },
+    []
+  );
+
+  const debouncedSaveNote = useDebounce(saveNote, 600);
+
+  function handleNoteInput(seId: number, value: string) {
+    setNoteInputs((prev) => ({ ...prev, [seId]: value }));
+    if (session) {
+      debouncedSaveNote(session.id, seId, value);
+    }
+  }
+
+  function noteInputValue(se: SessionExercise): string {
+    const key = String(se.id);
+    if (key in noteInputs) return noteInputs[key];
+    return se.sets_reps_note ?? "";
+  }
+
+  // ── Remove exercise from session ───────────────────────────────────────
+
+  async function handleRemoveExercise() {
+    if (!session || removeSeId === null) return;
+    const seId = removeSeId;
+    setRemoveSeId(null);
+    // Optimistic remove
+    setSession((s) =>
+      s
+        ? { ...s, exercises: s.exercises.filter((e) => e.id !== seId) }
+        : s
+    );
+    try {
+      await apiDelete(
+        `/api/training-sessions/${session.id}/exercises/${seId}`
+      );
+    } catch {
+      // Revert — reload session
+      loadSession(currentDate);
+    }
+  }
+
   // ── Add exercise to session ────────────────────────────────────────────
 
   function openAddExercise() {
@@ -317,6 +390,12 @@ export default function TrainingSessions() {
   })();
 
   const isToday = currentDate === today;
+
+  // ── Completion counters ────────────────────────────────────────────────
+
+  const completedCount = session?.exercises.filter((e) => e.completed).length ?? 0;
+  const totalCount = session?.exercises.length ?? 0;
+  const allDone = totalCount > 0 && completedCount === totalCount;
 
   // ── Render ─────────────────────────────────────────────────────────────
 
@@ -377,6 +456,20 @@ export default function TrainingSessions() {
 
         {!sessionLoading && session && (
           <>
+            {/* ── Completion counter ────────────────────────────────── */}
+            {totalCount > 0 && (
+              <div className={styles.completionHeader}>
+                <span className={styles.completionCounter}>
+                  {completedCount} / {totalCount} done
+                </span>
+                {allDone && (
+                  <span className={styles.sessionCompleteLabel} aria-live="polite">
+                    Session complete!
+                  </span>
+                )}
+              </div>
+            )}
+
             {session.exercises.length === 0 ? (
               <p className={styles.empty}>
                 No exercises for this day. Add one from the library below.
@@ -386,7 +479,7 @@ export default function TrainingSessions() {
                 {session.exercises.map((se) => {
                   const ex = exerciseInfo(se.exercise_id);
                   const exName = ex?.name ?? `Exercise #${se.exercise_id}`;
-                  const hint = se.sets_reps_note ?? ex?.default_sets_reps ?? null;
+                  const hasNoFields = !ex || ex.fields.length === 0;
                   return (
                     <div
                       key={se.id}
@@ -401,15 +494,43 @@ export default function TrainingSessions() {
                               handleToggleCompleted(se.id, se.completed)
                             }
                           />
-                          <span className={styles.exerciseName}>{exName}</span>
+                          <span
+                            className={`${styles.exerciseName} ${se.completed ? styles.exerciseNameDone : ""}`}
+                          >
+                            {exName}
+                          </span>
                         </label>
-                        {hint && (
-                          <span className={styles.hint}>{hint}</span>
-                        )}
+                        <button
+                          className={styles.removeBtn}
+                          onClick={() => setRemoveSeId(se.id)}
+                          aria-label={`Remove ${exName}`}
+                          title="Remove exercise"
+                        >
+                          &times;
+                        </button>
                       </div>
 
-                      {/* ── Field value inputs ─────────────────────── */}
-                      {ex && ex.fields.length > 0 && (
+                      {/* ── Notes / sets-reps field ────────────────── */}
+                      <div className={styles.noteRow}>
+                        <label className={styles.noteLabel} htmlFor={`note-${se.id}`}>
+                          {hasNoFields ? "Sets / reps note" : "Note"}
+                        </label>
+                        <input
+                          id={`note-${se.id}`}
+                          type="text"
+                          className={styles.noteInput}
+                          value={noteInputValue(se)}
+                          onChange={(e) => handleNoteInput(se.id, e.target.value)}
+                          placeholder={
+                            hasNoFields
+                              ? ex?.default_sets_reps ?? "e.g. 3×10"
+                              : "optional note"
+                          }
+                        />
+                      </div>
+
+                      {/* ── Field value inputs (only when done) ───── */}
+                      {se.completed && ex && ex.fields.length > 0 && (
                         <div className={styles.fieldInputs}>
                           {ex.fields.map((field) => (
                             <div key={field.id} className={styles.fieldRow}>
@@ -434,6 +555,14 @@ export default function TrainingSessions() {
                             </div>
                           ))}
                         </div>
+                      )}
+
+                      {/* ── Guidance for exercises with no fields ──── */}
+                      {hasNoFields && !se.completed && (
+                        <p className={styles.noFieldsHint}>
+                          Mark done to log this exercise. Add numeric fields in
+                          the Exercise Library to track weights or durations.
+                        </p>
                       )}
                     </div>
                   );
@@ -529,6 +658,17 @@ export default function TrainingSessions() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* ── Remove exercise confirmation ───────────────────────────────── */}
+      {removeSeId !== null && (
+        <ConfirmDialog
+          message="Remove this exercise from the session?"
+          confirmLabel="Remove"
+          cancelLabel="Cancel"
+          onConfirm={handleRemoveExercise}
+          onCancel={() => setRemoveSeId(null)}
+        />
       )}
     </div>
   );
