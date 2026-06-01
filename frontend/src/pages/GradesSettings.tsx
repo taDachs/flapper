@@ -1,6 +1,13 @@
 import { FormEvent, useEffect, useState } from "react";
 import { apiGet, apiPost, apiPut, apiDelete } from "../api";
 import styles from "./GradesSettings.module.css";
+import ConfirmDialog from "../components/ConfirmDialog";
+
+// French boulder (Font) scale — difficulty is sequential 1-based integer
+const FRENCH_BOULDER_PRESET = [
+  "3","4","5","5+","6A","6A+","6B","6B+","6C","6C+",
+  "7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+",
+];
 
 interface Grade {
   id: number;
@@ -34,6 +41,11 @@ export default function GradesSettings() {
 
   // Delete error
   const [deleteError, setDeleteError] = useState("");
+
+  // Preset loading state
+  const [presetLoading, setPresetLoading] = useState(false);
+  const [presetError, setPresetError] = useState("");
+  const [showPresetConfirm, setShowPresetConfirm] = useState(false);
 
   async function loadGrades() {
     try {
@@ -110,6 +122,34 @@ export default function GradesSettings() {
     }
   }
 
+  function handleLoadPreset() {
+    if (grades.length > 0) {
+      setShowPresetConfirm(true);
+    } else {
+      doLoadPreset();
+    }
+  }
+
+  async function doLoadPreset() {
+    setShowPresetConfirm(false);
+    setPresetLoading(true);
+    setPresetError("");
+    try {
+      for (let i = 0; i < FRENCH_BOULDER_PRESET.length; i++) {
+        await apiPost("/api/grades", {
+          name: FRENCH_BOULDER_PRESET[i],
+          difficulty: i + 1,
+          color: null,
+        });
+      }
+      await loadGrades();
+    } catch (err) {
+      setPresetError(err instanceof Error ? err.message : "Failed to load preset.");
+    } finally {
+      setPresetLoading(false);
+    }
+  }
+
   async function handleDelete(grade: Grade) {
     setDeleteError("");
     try {
@@ -155,6 +195,17 @@ export default function GradesSettings() {
 
       {deleteError && <p className={styles.error}>{deleteError}</p>}
 
+      <div className={styles.presetSection}>
+        <button
+          className={styles.btnSecondary}
+          onClick={handleLoadPreset}
+          disabled={presetLoading}
+        >
+          {presetLoading ? "Loading…" : "Load French boulder grades"}
+        </button>
+        {presetError && <p className={styles.error}>{presetError}</p>}
+      </div>
+
       <div className={styles.addSection}>
         <h3 className={styles.addHeading}>Add Grade</h3>
         <form onSubmit={handleAdd}>
@@ -180,6 +231,9 @@ export default function GradesSettings() {
                 placeholder="1"
                 required
               />
+              <span className={styles.helperText}>
+                A higher number = harder grade. Used for ordering and progress charts.
+              </span>
             </div>
             <div className={styles.fieldGroup}>
               <label>Color</label>
@@ -197,6 +251,16 @@ export default function GradesSettings() {
           {addError && <p className={styles.error}>{addError}</p>}
         </form>
       </div>
+
+      {/* Preset confirmation dialog */}
+      {showPresetConfirm && (
+        <ConfirmDialog
+          message="Grades already exist. Loading the preset will add the French boulder grades on top of your current grades. Continue?"
+          onConfirm={doLoadPreset}
+          onCancel={() => setShowPresetConfirm(false)}
+          confirmLabel="Load preset"
+        />
+      )}
 
       {/* Edit modal */}
       {editState && (
